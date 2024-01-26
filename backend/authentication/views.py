@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer
 from . models import User
 from django.contrib.auth import authenticate, login
-
+from django.shortcuts import redirect
 
 class UserDetails(APIView):
 
@@ -36,8 +36,11 @@ class UserRegister(APIView):
 
         if user_serializer.is_valid():
             user_serializer.save()
-            return UserLogin().post(request)    #after successful registration, login the user too
-            # return Response({'message': 'User Created Successfully'}, status=status.HTTP_201_CREATED)
+            # return redirect('user_login')
+            # user_login_instance = UserLogin()
+            # return user_login_instance.post(request)
+            # return UserLogin().post(request ,  email =  request.data.get('email') , password = request.data.get('password') )    #after successful registration, login the user too
+            return Response({'message': 'User Created Successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
@@ -59,7 +62,7 @@ class UserLogin(TokenObtainPairView):
             login(request, user)
 
             # Generate and return the token pair by delegating to parent class's post method
-            token = super().post(request, *args, **kwargs)
+            token = super().post(request,*args, **kwargs)
             # super is the parent class (TokenObtainPairView)
             # so we are calling parent class's post method to generate a token for the user associated with the request
 
