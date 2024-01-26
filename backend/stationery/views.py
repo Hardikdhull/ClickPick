@@ -16,11 +16,9 @@ class GetItemList(APIView):
         all_items = Items.objects.all()
         serializer = ItemsSerializer(all_items, many=True)
 
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class GetActiveOrders(APIView):
 
@@ -31,11 +29,8 @@ class GetActiveOrders(APIView):
         all_orders = ActiveOrders.objects.filter(user=request.user)
         serializer = ActiveOrdersSerializer(all_orders, many=True)
 
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class GetPastOrders(APIView):
 
@@ -46,11 +41,8 @@ class GetPastOrders(APIView):
         all_orders = PastOrders.objects.filter(user=request.user)
         serializer = PastOrdersSerializer(all_orders, many=True)
 
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetActivePrintouts(APIView):
 
@@ -61,11 +53,8 @@ class GetActivePrintouts(APIView):
         all_orders = ActivePrintOuts.objects.filter(user=request.user)
         serializer = ActivePrintoutsSerializer(all_orders, many=True)
 
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class GetPastPrintouts(APIView):
 
@@ -76,11 +65,9 @@ class GetPastPrintouts(APIView):
         all_orders = PastPrintOuts.objects.filter(user=request.user)
         serializer = PastPrintoutsSerializer(all_orders, many=True)
 
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
         
 class MakeOrder(APIView):
 

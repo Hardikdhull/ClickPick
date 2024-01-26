@@ -9,7 +9,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  const url = "http://192.168.223.198:8000"; // Replace with your actual API URL
+  const url = "http://192.168.1.35:8000"; // Replace with your actual API URL
 
   const handleLogin = async () => {
     try {

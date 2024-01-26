@@ -23,7 +23,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [env('ALLOWED_HOST_1'), env('ALLOWED_HOST_2'), env('ALLOWED_HOST_3'),"http://localhost:3000", "*"]
+ALLOWED_HOSTS = [env('ALLOWED_HOST_1'), env('ALLOWED_HOST_2'), env('ALLOWED_HOST_3'), "*"]
 
 # The domains that are allowed to make requests
 # CORS_ALLOWED_ORIGINS = [env('CORS_ALLOWED_ORIGIN_1'), env('CORS_ALLOWED_ORIGIN_2')]
