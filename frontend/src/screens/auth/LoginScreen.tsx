@@ -4,12 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
-
+// import { BACKEND_URL } from "@env"
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  const url = "http://192.168.1.35:8000"; // Replace with your actual API URL
+
+  // Access the API_URL environment variable
+  const url = "http://192.168.239.198:8000"
 
   const handleLogin = async () => {
     try {

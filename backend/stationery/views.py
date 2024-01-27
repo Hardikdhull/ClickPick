@@ -85,8 +85,8 @@ class MakeOrder(APIView):
 
         for order in orders:
             data = {
-                'user' : request.user,
-                'item' : Items.objects.filter(item=order['item']).first(),
+                'user' : request.user.pk,
+                'item' : Items.objects.filter(item=order['item']).first().pk,
                 'quantity' : int(order['quantity']),
                 'cost' : float(order['cost']),
                 'custom_message' : order['custom_message'],
@@ -95,7 +95,7 @@ class MakeOrder(APIView):
             serializer = ActiveOrdersSerializer(data=data)
 
             if serializer.is_valid():
-                pass
+                serializer.save()
             else:
                 return Response({'message': 'Order Creation Failed'}, status=status.HTTP_400_BAD_REQUEST)
             

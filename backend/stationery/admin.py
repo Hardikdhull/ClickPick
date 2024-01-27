@@ -7,3 +7,4 @@ class ItemsAdmin(admin.ModelAdmin):
     list_editable = ['in_stock']
 
 admin.site.register(Items, ItemsAdmin)
+admin.site.register(ActiveOrders)
