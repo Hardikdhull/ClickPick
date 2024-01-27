@@ -14,6 +14,7 @@ const styles = {
   addToCartButton: tw`bg-blue-500 text-white px-4 py-2 rounded-full mt-2`,
   modalContainer: tw`flex-1 justify-center items-center`,
   modalContent: tw`bg-white p-4 rounded-lg w-80 h-80`,
+  buyNowButton: tw`bg-green-500 text-white px-4 py-2 rounded-full mt-2`,
 };
 
 const HomeScreen = () => {
@@ -119,9 +120,20 @@ const HomeScreen = () => {
   };
 
   const handleBuyNow = () => {
+    // Filter cart items that have a quantity greater than 1
+    const itemsToBuy = cartItems.filter((item) => item.quantity > 1);
+
+    if (itemsToBuy.length === 0) {
+      // Optionally, you can show a message or take some action if no items are selected
+      console.log('No items selected for purchase.');
+      return;
+    }
+
     // Implement your logic for handling the "Buy Now" action
     // This can include navigating to a checkout screen or processing the order.
     console.log('Buy Now clicked!');
+    console.log('Items to Buy:', itemsToBuy);
+
     // Close the modal after processing the "Buy Now" action
     setModalVisible(false);
   };
@@ -129,12 +141,12 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>E-Commerce HomeScreen</Text>
-      {user && (
+      {/* {user && (
         <View>
           <Text>User Details:</Text>
           <Text>Name: {user.name}</Text>
         </View>
-      )}
+      )} */}
       <FlatList
         data={items}
         keyExtractor={(item) => item.id.toString()}
@@ -183,16 +195,15 @@ const HomeScreen = () => {
         visible={isModalVisible}
         onRequestClose={toggleModal}
       >
-        {/* Wrap your modal content in a View to control its styles */}
         <View style={styles.modalContainer}>
           <View style={[styles.modalContent, { zIndex: 2 }]}>
             <Text>Review Your Order</Text>
             <FlatList
-              data={cartItems}
+              data={cartItems.filter((item) => item.quantity >= 1)}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <View>
-                  <Text>{`${item.quantity} x ${item.itemName} - $${item.price * item.quantity}`}</Text>
+                  <Text>{`${item.quantity} x ${item.item} - INR ${item.price * item.quantity}`}</Text>
                 </View>
               )}
             />
