@@ -5,10 +5,19 @@ from rest_framework.response import Response
 from rest_framework import status
 from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items, TempFileStorage
 from . serializers import ActiveOrdersSerializer, PastOrdersSerializer, ActivePrintoutsSerializer, PastPrintoutsSerializer, ItemsSerializer
+
 from django.core.files.storage import default_storage
-from .calculate_cost import check_black_content
-from pathlib import Path
 from django.core.files.base import ContentFile
+
+import os
+from pathlib import Path
+
+from math import ceil
+
+from .calculate_cost.pdf import check_black_content
+from .calculate_cost.word import word_to_images
+from .calculate_cost.word import images_to_pdfs
+
 # To get all Items
 class GetItemList(APIView):
     
@@ -124,6 +133,23 @@ class MakePrintout(APIView):
         else:
             return Response({'message': 'Printout Order Creation Failed'}, status=status.HTTP_400_BAD_REQUEST)
         
+        
+def parse_page_ranges(page_ranges):
+    pages_to_check = []
+
+    ranges = page_ranges.split(',')
+    for item in ranges:
+        if '-' in item:
+            start, end = map(int, item.split('-'))
+            pages_to_check.extend(range(start, end + 1))
+        else:
+            pages_to_check.append(int(item))
+    
+    return pages_to_check        
+        
+        
+        
+        
 class CostCalculationView(APIView):
 
     def post(self, request):
@@ -144,21 +170,69 @@ class CostCalculationView(APIView):
 
                 # Full path to the temporarily saved file
                 temp_path = default_storage.path(temp_file)
+                
+                extension = str(temp_path).split('.')[-1] 
+                
+                if (extension.lower() == 'pdf'):
 
-                # Assuming check_black_content function is available
-                black_pages, non_black_pages = check_black_content.check_black_content(pdf_path=temp_path, page_ranges=page)
+                    black_pages, non_black_pages = check_black_content.check_black_content(pdf_path=temp_path, page_ranges=page)
 
-                cost += 2.0 * len(non_black_pages)
-                cost += 3.0 * len(black_pages)
-                print(black_pages)
-                print(non_black_pages)
-                # Delete the temporarily saved file
-                default_storage.delete(temp_file)
+                    cost += 2.0 * len(non_black_pages)
+                    cost += 3.0 * len(black_pages)
 
+                    # Delete the temporarily saved file
+                    default_storage.delete(temp_file)
+                    
+                elif (extension.lower() == 'docx'):
+                    
+                    # Convert word file to images and get word document length as return value
+                    doc_length = word_to_images.word_to_images(temp_path)
+                    
+                    # Convert the images into pdf file and get its path as return value
+                    images_to_pdfs.images_to_pdfs(doc_length)
+                    
+                    # # Then perform exact same operations as those on pdf
+                    
+                    no_of_pdfs = ceil(doc_length/10)
+    
+                    for i in range(no_of_pdfs):
+                        pdf_path =  str(Path(__file__).resolve().parent / 'calculate_cost' / 'word' / 'temp_pdfs' / f'{i}.pdf' )
+                        pages_to_check = parse_page_ranges(page)
+                        actual_pages_to_check = []
+                        for each_page in pages_to_check:
+                            if (each_page > i*10 and each_page <= (i+1)*10):
+                                actual_pages_to_check.append(each_page - i*10)
+                              
+                        if (len(actual_pages_to_check) !=0 ) : 
+                            # Convert the array to a string with elements separated by ','
+                            actual_pages_to_check_string = ','.join(map(str, actual_pages_to_check))
+                            print(actual_pages_to_check_string)
+                            print(pdf_path)
+                            # first iteration mein 1 to 10 pages lene hai and subtract 0
+                            # second iteration mein 11 to 20 pages lene hai and subtract 10
+                            # third iteration mein 21 to 30 pages lene hai and subtract 20
+                            # and so on..
+                            black_pages, non_black_pages = check_black_content.check_black_content(pdf_path=pdf_path, page_ranges=actual_pages_to_check_string)
+
+                            cost += 2.0 * len(non_black_pages)
+                            cost += 3.0 * len(black_pages)
+                        
+                        os.remove(pdf_path)
+
+                    # # Delete the temporarily saved file
+                    default_storage.delete(temp_file)
+                    
+                    # # And finally delete the pdf file created
+                    # os.remove(pdf_path)
+                
+                else:
+                    default_storage.delete(temp_file)
+                    return Response({'error': 'Invalid file type. Only pdf and docx accepted'}, status=status.HTTP_400_BAD_REQUEST)                    
+
+            # If everything goes OK, then return the cost
             return Response({'cost': cost}, status=status.HTTP_200_OK)
 
         except Exception as e:
-            print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
                 
