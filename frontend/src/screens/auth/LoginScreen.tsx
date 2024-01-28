@@ -11,7 +11,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   // Access the API_URL environment variable
-  const url = "http://192.168.239.198:8000"
+  const url = "http://192.168.223.198:8000"
 
   const handleLogin = async () => {
     try {
@@ -25,7 +25,7 @@ const LoginScreen = () => {
         const { access, refresh } = loginResponse.data;
         await AsyncStorage.setItem('access_token', access);
         await AsyncStorage.setItem('refresh_token', refresh);
-        navigation.navigate('Dashboard');
+        navigation.navigate('BottomTabs');
       } else {
         // Login failed, handle errors
         Alert.alert('Login Failed', 'Invalid credentials. Please check your email and password.');

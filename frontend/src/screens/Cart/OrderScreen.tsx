@@ -6,7 +6,7 @@ import tw from 'twrnc'; // Import twrnc
 
 const OrderScreen = () => {
     const [orders, setOrders] = useState([]);
-    const url = "http://192.168.239.198:8000"
+    const url = "http://192.168.223.198:8000"
 
     useEffect(() => {
         const fetchOrders = async () => {

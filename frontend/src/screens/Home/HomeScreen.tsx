@@ -20,7 +20,7 @@ const styles = {
 const HomeScreen = () => {
   const [user, setUser] = useState(null);
   const [items, setItems] = useState([]);
-  const url = "http://192.168.239.198:8000";
+  const url = "http://192.168.223.198:8000";
 
   const [cartItems, setCartItems] = useState([]);
 

@@ -5,10 +5,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items, TempFileStorage
 from . serializers import ActiveOrdersSerializer, PastOrdersSerializer, ActivePrintoutsSerializer, PastPrintoutsSerializer, ItemsSerializer
-
+from django.core.files.storage import default_storage
 from .calculate_cost import check_black_content
 from pathlib import Path
-
+from django.core.files.base import ContentFile
 # To get all Items
 class GetItemList(APIView):
     
@@ -125,43 +125,38 @@ class MakePrintout(APIView):
             return Response({'message': 'Printout Order Creation Failed'}, status=status.HTTP_400_BAD_REQUEST)
         
 class CostCalculationView(APIView):
-    
-    # permission_classes = (IsAuthenticated, )
-    
+
     def post(self, request):
-        
-        # print(request.data)
-        
-        files = request.data.get('files')
-        pages = request.data.get('pages')
-        
+        files = request.FILES.getlist('files')
+        pages = request.data.getlist('pages')
+
         cost = 0
-        
 
         try:
-            print('entered try')
             n = len(files)
-            
+
             for i in range(n):
-                page = pages[i]
                 file = files[i]
-                print(page)
-                print(file)
-                # First save the file so that its path can be used everywhere
-                temp_file = TempFileStorage.objects.create()
-                print(temp_file)
-                temp_file.file = file
-                print(temp_file)
-                # temp_file.save()
-                temp_path = Path(__file__).resolve().parent.parent / 'media' / temp_file.file   # full absolute path
-                
+                page = pages[i]
+
+                # Save the file temporarily
+                temp_file = default_storage.save('temp_files/' + file.name, ContentFile(file.read()))
+
+                # Full path to the temporarily saved file
+                temp_path = default_storage.path(temp_file)
+
+                # Assuming check_black_content function is available
                 black_pages, non_black_pages = check_black_content.check_black_content(pdf_path=temp_path, page_ranges=page)
-                
+
                 cost += 2.0 * len(non_black_pages)
                 cost += 3.0 * len(black_pages)
-                
+                print(black_pages)
+                print(non_black_pages)
+                # Delete the temporarily saved file
+                default_storage.delete(temp_file)
+
             return Response({'cost': cost}, status=status.HTTP_200_OK)
-        
+
         except Exception as e:
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
