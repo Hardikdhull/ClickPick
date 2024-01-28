@@ -8,3 +8,4 @@ class ItemsAdmin(admin.ModelAdmin):
 
 admin.site.register(Items, ItemsAdmin)
 admin.site.register(ActiveOrders)
+admin.site.register(ActivePrintOuts)

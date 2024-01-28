@@ -9,4 +9,5 @@ urlpatterns = [
     path('past-printouts/', views.GetPastPrintouts.as_view(), name='get_past_printouts'),
     path('create-order/', views.MakeOrder.as_view(), name='create_order'),
     path('create-printout/', views.MakePrintout.as_view(), name='create_printout'),
+    path('calculate-cost/', views.CostCalculationView.as_view(), name='calculate_cost'),
 ]

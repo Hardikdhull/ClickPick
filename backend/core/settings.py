@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'authentication',
     'stationery',
+    'django_cleanup.apps.CleanupConfig',        # https://pypi.org/project/django-cleanup/ , https://github.com/un1t/django-cleanup
 ]
 
 # Telling Django to use the JWT method for authentication

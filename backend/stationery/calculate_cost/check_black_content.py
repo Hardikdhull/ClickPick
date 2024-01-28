@@ -1,19 +1,38 @@
-# Utility File to check the number of black pages in a pdf to calculate its cost
-
-
 import fitz  # PyMuPDF
-
 from pathlib import Path
 
 def is_blackish(rgb_tuple, threshold=50):
-    # Define a threshold for darkness based on a sum of RGB values
-    return sum(rgb_tuple) <= threshold * 3  # Multiplying by 3 to cover all three RGB channels
+    return sum(rgb_tuple) <= threshold * 3
 
-def check_black_content(pdf_path, threshold=0.1):
+def parse_page_ranges(page_ranges):
+    pages_to_check = []
+
+    ranges = page_ranges.split(',')
+    for item in ranges:
+        if '-' in item:
+            start, end = map(int, item.split('-'))
+            pages_to_check.extend(range(start, end + 1))
+        else:
+            pages_to_check.append(int(item))
+    
+    return pages_to_check
+
+def check_black_content(pdf_path, page_ranges, threshold=0.1):
     doc = fitz.open(pdf_path)
 
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
+    pages_to_check = parse_page_ranges(page_ranges)
+
+    black_pages = []
+    non_black_pages = []
+
+    for page_num in pages_to_check:
+        adjusted_page_num = page_num - 1  # Adjust for zero-based indexing
+
+        if adjusted_page_num < 0 or adjusted_page_num >= len(doc):
+            print(f"Warning: Page {page_num} is out of range.")
+            continue
+
+        page = doc.load_page(adjusted_page_num)
         pix = page.get_pixmap()
 
         blackish_pixels = 0
@@ -27,9 +46,21 @@ def check_black_content(pdf_path, threshold=0.1):
 
         blackish_percentage = blackish_pixels / total_pixels
         if blackish_percentage > threshold:
-            print(f"Page {page_num + 1}: Blackish content occupies more than {threshold * 100}%")
+            black_pages.append(page_num)
+        else:
+            non_black_pages.append(page_num)
 
     doc.close()
 
-# Replace 'your_pdf_file.pdf' with your PDF file path
-check_black_content(Path(__file__).resolve().parent / 'file2.pdf', threshold=0.1)
+    return black_pages, non_black_pages
+
+'''
+# Example usage:
+pdf_path = Path(__file__).resolve().parent / 'file3.pdf'
+page_ranges = "1-41"
+
+black_pages, non_black_pages = check_black_content(pdf_path, page_ranges, threshold=0.1)
+
+print("Black Pages:", black_pages)
+print("Non-Black Pages:", non_black_pages)
+'''
