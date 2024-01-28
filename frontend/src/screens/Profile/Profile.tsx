@@ -4,11 +4,10 @@ import axios from 'axios';
 import tw from 'twrnc';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import LoginScreen from '../auth/LoginScreen';
 
 const ProfileScreen = () => {
   const [user, setUser] = useState(null);
-  const url = "http://192.168.223.198:8000";
+  const url = "http://192.168.151.198:8000";
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -29,19 +28,6 @@ const ProfileScreen = () => {
 
     fetchUserDetails();
   }, []);
-
-  const handleLogout = async () => {
-    try {
-      // Clear access and refresh tokens from AsyncStorage
-      await AsyncStorage.removeItem('access_token');
-      await AsyncStorage.removeItem('refresh_token');
-
-      return  <LoginScreen/>
-    } catch (error) {
-      console.error('Error logging out:', error);
-      Alert.alert('Error', 'Failed to log out. Please try again.');
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -68,13 +54,7 @@ const ProfileScreen = () => {
             <Text style={styles.buttonText}>Past Orders</Text>
           </TouchableOpacity>
 
-          {/* Logout Button */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleLogout}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
+          
         </View>
       )}
     </View>
