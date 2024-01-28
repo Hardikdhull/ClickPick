@@ -6,6 +6,7 @@ import CartScreen from '../screens/Cart/CartScreen';
 import ProfileScreen from '../screens/Profile/Profile';
 import Icon from 'react-native-vector-icons/Ionicons';
 import OrderScreen from '../screens/Cart/OrderScreen';
+import ProfileNavigator from '../screens/Profile/ProfileNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +23,7 @@ const BottomTabNavigator = () => {
             iconName = focused ? 'search' : 'search-outline';
           } else if (route.name === 'Order') {
             iconName = focused ? 'cart' : 'cart-outline';
-          } else if (route.name === 'Profile') {
+          } else if (route.name === 'ProfileNavigaor') {
             iconName = focused ? 'person' : 'person-outline';
           }
 
@@ -33,10 +34,10 @@ const BottomTabNavigator = () => {
       })}
       
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Order" component={OrderScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Home" component={HomeScreen}  />
+      <Tab.Screen name="Search" component={SearchScreen}  />
+      <Tab.Screen name="Order" component={OrderScreen}  />
+      <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );
 };
