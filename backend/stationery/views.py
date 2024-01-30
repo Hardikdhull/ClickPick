@@ -14,9 +14,12 @@ from pathlib import Path
 
 from math import ceil
 
+from django.http import FileResponse
+
 from .calculate_cost.pdf import check_black_content
 from .calculate_cost.word import word_to_images
 from .calculate_cost.word import images_to_pdfs
+from .generate_firstpage import firstpage
 
 # To get all Items
 class GetItemList(APIView):
@@ -235,7 +238,34 @@ class CostCalculationView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-                
+       
+       
+class FirstPageGenerationView(APIView):
+    
+    permission_classes = (IsAuthenticated, )
+    
+    def post(self, request):
+        
+        try:
+            subject_name = request.data.get('subject_name')
+            subject_code = request.data.get('subject_code')
+            faculty_name = request.data.get('faculty_name')
+            student_name = request.data.get('student_name')
+            faculty_designation = request.data.get('faculty_designation')
+            roll_number = request.data.get('roll_number')
+            semester = request.data.get('semester')
+            group = request.data.get('group')
+            image_path = 'maitlogomain.png'       
+            
+            file_path = firstpage.create_word_file(subject_name=subject_name, subject_code=subject_code,
+                                faculty_name=faculty_name, student_name=student_name, faculty_designation=faculty_designation,
+                                roll_number=roll_number, semester=semester, group=group, image_path=image_path)  
+            
+            response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename='first_page.docx')
+        
+            return response
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
             
             
 

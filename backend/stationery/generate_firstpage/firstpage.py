@@ -125,8 +125,12 @@ def create_word_file(subject_name, subject_code, faculty_name, student_name,
 
     # Save the document
     doc.save(output_filename)
+    
+    return output_filename
 
+'''
 # Example usage:
 create_word_file(subject_name='Programming in Java Lab', subject_code='CIC-258', faculty_name='Ms. Kajol',
                  student_name='Chanmeet Singh Sahni', faculty_designation='Assistant Professor', roll_number='01296402722',
                  semester='4th', group='3C11', image_path='maitlogomain.png')
+'''
