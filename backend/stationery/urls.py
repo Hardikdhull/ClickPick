@@ -13,4 +13,5 @@ urlpatterns = [
     path('calculate-cost/', views.CostCalculationView.as_view(), name='calculate_cost'),
     path('generate-firstpage/', views.FirstPageGenerationView.as_view(), name='generate_firstpage'),
     path('delete_active_order/<int:order_id>/', admin_utils.delete_active_order, name='delete_active_order'),
+    path('delete_active_printout/<int:order_id>/', admin_utils.delete_active_printout, name='delete_active_printout'),
 ]
