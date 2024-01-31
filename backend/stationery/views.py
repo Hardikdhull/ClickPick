@@ -151,7 +151,6 @@ def parse_page_ranges(page_ranges):
         
         
 class CostCalculationView(APIView):
-
     def post(self, request):
         files = request.FILES.getlist('files')
         pages = request.data.getlist('pages')
@@ -180,6 +179,7 @@ class CostCalculationView(APIView):
                     cost += 2.0 * len(non_black_pages)
                     cost += 3.0 * len(black_pages)
 
+                    print("called")     
                     # Delete the temporarily saved file
                     default_storage.delete(temp_file)
                     
