@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer
@@ -69,3 +70,21 @@ class UserLogin(TokenObtainPairView):
             return Response(token.data, status=status.HTTP_200_OK)
         else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+
+class UserLogout(APIView):
+
+    def post(self, request):
+        # Get the refresh token from the request
+        refresh_token = request.data.get('refresh_token')
+
+        if not refresh_token:
+            return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Blacklist the refresh token using the built-in SimpleJWT method
+            RefreshToken(refresh_token).blacklist()
+        except Exception as e:
+            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
