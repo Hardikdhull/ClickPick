@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import OrderScreen from '../screens/Cart/OrderScreen';
 import ProfileNavigator from '../screens/Profile/ProfileNavigator';
 import PrintoutCostCalculatorScreen from '../screens/Cart/PrintoutCost';
+import PrintoutStack from '../screens/Cart/PrintoutStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +38,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen}  />
       <Tab.Screen name="Search" component={SearchScreen}  />
-      <Tab.Screen name="Printout" component={PrintoutCostCalculatorScreen}  />
+      <Tab.Screen name="Printout" component={PrintoutStack}  />
       <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );

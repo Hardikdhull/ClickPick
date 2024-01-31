@@ -25,9 +25,7 @@ const RegisterScreen = () => {
 
       if (response.status === 201) {
         // Registration successful, automatically login after registration
-        await handleLogin();
-      } else if (response.status === 400) {
-        Alert.alert('Registration Failed', 'User with this email already exists.');
+        navigation.navigate('login')
       }
     } catch (error) {
       console.error('Registration Error:', error);
