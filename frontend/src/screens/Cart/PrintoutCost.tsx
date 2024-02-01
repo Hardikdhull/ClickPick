@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import DocumentPicker from 'react-native-document-picker'; // Import the DocumentPicker library
 import tw from 'twrnc';
+import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
 
 const PrintoutCostCalculatorScreen = () => {
+  const navigation = useNavigation(); // Get the navigation object
+
   const [files, setFiles] = useState({ file1: null, file2: null });
   const [pages, setPages] = useState({ pages1: '', pages2: '' });
   const [cost, setCost] = useState(null)
-  const url = "http://192.168.151.198:8000";
+  const url = "http://192.168.1.3:8000";
 
   const handleFilePick = async (fileNumber) => {
     try {
@@ -75,6 +78,12 @@ const PrintoutCostCalculatorScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Printout Cost Calculator</Text>
+      {/* Button to navigate to FirstPageGenerator */}
+      <Button
+        title="Go to First Page Generator"
+        onPress={() => navigation.navigate('FirstPageGenerator')}
+        style={styles.navigationButton}
+      />
 
       {/* File input tags */}
       <View style={styles.inputContainer}>
@@ -154,6 +163,7 @@ const styles = {
   costContainer: tw`my-4 `,
   costLabel: tw`font-bold mb-2`,
   costValue: tw`text-xl`,
+  navigationButton: tw`mb-4 w-10`,
 };
 
 export default PrintoutCostCalculatorScreen;

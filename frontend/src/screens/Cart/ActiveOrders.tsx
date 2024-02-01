@@ -6,7 +6,7 @@ import tw from 'twrnc';
 
 const ActiveOrdersScreen = () => {
     const [activeOrders, setActiveOrders] = useState([]);
-    const url = "http://192.168.151.198:8000";
+    const url = "http://192.168.1.3:8000";
 
     useEffect(() => {
         const fetchActiveOrders = async () => {

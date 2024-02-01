@@ -255,7 +255,7 @@ class FirstPageGenerationView(APIView):
             roll_number = request.data.get('roll_number')
             semester = request.data.get('semester')
             group = request.data.get('group')
-            image_path = 'maitlogomain.png'       
+            image_path = 'maitlogomain.png'
             
             file_path = firstpage.create_word_file(subject_name=subject_name, subject_code=subject_code,
                                 faculty_name=faculty_name, student_name=student_name, faculty_designation=faculty_designation,
@@ -266,6 +266,6 @@ class FirstPageGenerationView(APIView):
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            
+              
             
 

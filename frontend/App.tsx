@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import BottomTabNavigator from './src/components/BottomTabNavigator';
 import LoginScreen from './src/screens/auth/LoginScreen';
 import RegisterScreen from './src/screens/auth/RegisterScreen';
+import axios from 'axios';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const url = "http://192.168.151.198:8000";
+  const url = "http://192.168.1.3:8000";
 
   useEffect(() => {
     // Check if the user is logged in
