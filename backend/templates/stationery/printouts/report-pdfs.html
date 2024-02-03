@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stationery - Reports</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .pdf-table th,
+        .pdf-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            /*font-weight: bold;*/
+            text-align: center;
+        }
+        
+        .pdf-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .pdf-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: 2px solid #000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .pdf-button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        #REPORT-PDF h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #REPORT-PDF h3 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <label for="order_id_checkbox">Order ID</label>
+        <input type="checkbox" id="order_id_checkbox" class="checkbox" checked>
+        <label for="user_checkbox">User</label>
+        <input type="checkbox" id="user_checkbox" class="checkbox" checked>
+        <label for="coloured_pages_checkbox">Coloured Pages</label>
+        <input type="checkbox" id="coloured_pages_checkbox" class="checkbox" checked>
+        <label for="black_and_white_pages_checkbox">Black & White Pages</label>
+        <input type="checkbox" id="black_and_white_pages_checkbox" class="checkbox" checked>
+        <label for="file_checkbox">File</label>
+        <input type="checkbox" id="file_checkbox" class="checkbox" checked>
+        <label for="cost_checkbox">Cost</label>
+        <input type="checkbox" id="cost_checkbox" class="checkbox" checked>
+        <label for="order_time_checkbox">Order Time</label>
+        <input type="checkbox" id="order_time_checkbox" class="checkbox" checked>
+        <label for="custom_message_checkbox">Custom Message</label>
+        <input type="checkbox" id="custom_message_checkbox" class="checkbox" checked>
+
+        <button class="pdf-button" onclick="printPageArea('REPORT-PDF')">Print PDF</button>
+    </div>
+    <br>
+    <div id="REPORT-PDF">
+        <h2>
+            {% if report_type %}
+                {{ report_type }} 
+            {% endif %}
+        </h2>
+        <h3>
+            {% if start_date and end_date %}
+                ({{ start_date|date:"F d, Y" }} - {{ end_date|date:"F d, Y" }})
+            {% endif %}
+        </h3>
+        <table class="pdf-table">
+            <thead>
+                <tr id="heading_row">
+                    <th id="order_id_heading">ORDER ID</th>
+                    <th id="user_heading">USER</th>
+                    <th id="coloured_pages_heading">COLOURED PAGES</th>
+                    <th id="black_and_white_pages_heading">BLACK & WHITE PAGES</th>
+                    <th id="file_heading">FILE</th>
+                    <th id="cost_heading">COST</th>
+                    <th id="order_time_heading">ORDER TIME</th>
+                    <th id="custom_message_heading">CUSTOM MESSAGE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in all_records %}
+                <tr>
+                    <td id="order_id_data">{{ record.order_id }}</td>
+                    <td id="user_data">{{ record.user.name }}</td>
+                    <td id="coloured_pages_data">{{ record.coloured_pages }}</td>
+                    <td id="black_and_white_pages_data">{{ record.black_and_white_pages }}</td>
+                    <td id="file_data">{{ record.file.url }}</td>
+                    <td id="cost_data">{{ record.cost }}</td>
+                    <td id="order_time_data">{{ record.order_time }}</td>
+                    <td id="custom_message_data">{{ record.custom_message }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.checkbox');
+        const headings = document.querySelectorAll('th');
+        const dataCells = document.querySelectorAll('td');
+
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    headings[index].style.display = 'table-cell';
+                    dataCells.forEach(cell => {
+                        if (cell.cellIndex === index) {
+                            cell.style.display = 'table-cell';
+                        }
+                    });
+                } else {
+                    headings[index].style.display = 'none';
+                    dataCells.forEach(cell => {
+                        if (cell.cellIndex === index) {
+                            cell.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+
+        function printPageArea(areaID) {
+            const printContent = document.getElementById(areaID).innerHTML;
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            document.title = 'Printouts Report';
+            // Restore display of hidden fields after printing (if needed)
+            checkboxes.forEach((checkbox, index) => {
+                if (!checkbox.checked) {
+                    headings[index].style.display = 'table-cell';
+                    dataCells.forEach(cell => {
+                        if (cell.cellIndex === index) {
+                            cell.style.display = 'table-cell';
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
