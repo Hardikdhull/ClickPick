@@ -1,13 +1,15 @@
 from django.contrib import admin
 from import_export.admin import ExportActionMixin
-
 from django.utils.html import format_html
 
 from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items
 
+
+
 class ItemsAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ['item', 'price', 'in_stock', 'image_preview']
     list_editable = ['in_stock']
+
 
 class ActiveOrdersAdmin(admin.ModelAdmin):
     list_display = ['order_id', 'user', 'item', 'quantity', 'cost', 'custom_message', 'order_time', 'delete_button']
@@ -46,33 +48,40 @@ class ActivePrintoutsAdmin(admin.ModelAdmin):
         )
         
     def FILE(self, obj):
-        return format_html("<a href='{url}' style='text-decoration: underline; color: blue;'>{url}</a>", url = obj.file.url if obj.file else '')
+        return format_html("<a href='{url}' target='_blank' style='text-decoration: underline; color: blue;'>{url}</a>", url = obj.file.url if obj.file else '')
         
     delete_button.short_description = "Mark printout as past"
 
-class PastOrdersAdmin(admin.ModelAdmin):
+
+class PastOrdersAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ['order_id', 'user', 'item', 'quantity', 'cost', 'custom_message', 'order_time']  
     list_filter = ['item']      
     
-    # Overriding get_actions to remove default delete action because we don't want accidental deletion
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+    change_list_template = "stationery/orders/report_generate_changelist.html"
+    
+    # This will disbale add functionality
+    def has_add_permission(self, request):
+        return False
+    
+    # This will disable delete functionality
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class PastPrintoutsAdmin(admin.ModelAdmin):
     list_display = ['order_id', 'user', 'FILE', 'coloured_pages', 'black_and_white_pages', 'cost', 'custom_message', 'order_time']    
     
-    # Overriding get_actions to remove default delete action because we don't want accidental deletion
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+    change_list_template = "stationery/printouts/report_generate_changelist.html"
+    
+    # This will disbale add functionality
+    def has_add_permission(self, request):
+        return False
+    
+    # This will disable delete functionality
+    def has_delete_permission(self, request, obj=None):
+        return False
     
     def FILE(self, obj):
-        return format_html("<a href='{url}' style='text-decoration: underline; color: blue;'>{url}</a>", url = obj.file.url if obj.file else '')
+        return format_html("<a href='{url}' target='_blank' style='text-decoration: underline; color: blue;'>{url}</a>", url = obj.file.url if obj.file else '')
 
  
         

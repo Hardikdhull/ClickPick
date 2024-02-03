@@ -4,6 +4,7 @@ from django.utils.html import mark_safe
 from authentication.models import User
 
 
+# Model for all items in the stationery
 class Items(models.Model):
 
     item = models.CharField(max_length=25)
@@ -22,7 +23,7 @@ class Items(models.Model):
         verbose_name_plural = "Items"
 
 
-
+# Model for active orders
 class ActiveOrders(models.Model):
 
     order_id = models.AutoField(primary_key=True)   #auto generated auto incrementing
@@ -42,7 +43,7 @@ class ActiveOrders(models.Model):
         db_table = 'stationery_active_orders'  
         verbose_name_plural = "Active Orders"
 
-
+# Model for completed (past) orders
 class PastOrders(models.Model):
 
     order_id = models.CharField(max_length=7, unique=True, db_index=True)  
@@ -63,6 +64,7 @@ class PastOrders(models.Model):
         verbose_name_plural = "Past Orders"
 
 
+# Model for active printouts
 class ActivePrintOuts(models.Model):
 
     order_id = models.AutoField(primary_key=True)   #auto generated auto incrementing
@@ -84,7 +86,7 @@ class ActivePrintOuts(models.Model):
         db_table = 'stationery_active_printouts'  
         verbose_name_plural = "Active Print-Outs"
 
-
+# Model for completed (past) printouts
 class PastPrintOuts(models.Model):
 
     order_id = models.CharField(max_length=7, unique=True, db_index=True)
@@ -107,10 +109,4 @@ class PastPrintOuts(models.Model):
         verbose_name_plural = "Past Print-Outs"
 
 
-class TempFileStorage(models.Model):
-    file = models.FileField(upload_to=utils.temp_file_rename)
-    
-    class Meta:
-        db_table = 'stationery_temp_files'  
-        verbose_name_plural = "Temporary Files"
 
