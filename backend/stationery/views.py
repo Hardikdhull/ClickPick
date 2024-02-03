@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items, TempFileStorage
+from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items
 from . serializers import ActiveOrdersSerializer, PastOrdersSerializer, ActivePrintoutsSerializer, PastPrintoutsSerializer, ItemsSerializer
 
 from django.core.files.storage import default_storage
@@ -135,6 +135,9 @@ class MakePrintout(APIView):
             return Response({'message': 'Printout Order Created Successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'message': 'Printout Order Creation Failed'}, status=status.HTTP_400_BAD_REQUEST)
+   
+   
+   
         
         
 def parse_page_ranges(page_ranges):
@@ -150,9 +153,7 @@ def parse_page_ranges(page_ranges):
     
     return pages_to_check        
         
-        
-        
-        
+# To calculate cost for printouts   
 class CostCalculationView(APIView):
     def post(self, request):
         files = request.FILES.getlist('files')
@@ -237,9 +238,8 @@ class CostCalculationView(APIView):
 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-       
-       
+      
+# To generate first page for files
 class FirstPageGenerationView(APIView):
     
     permission_classes = (IsAuthenticated, )
