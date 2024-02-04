@@ -26,7 +26,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined', 'password')
+        fields = ('email', 'name', 'number', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined', 'password')
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -44,7 +44,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined', 'password')
+        fields = ('email', 'name', 'number', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined', 'password')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -72,13 +72,13 @@ class CustomUserAdmin(UserAdmin):
     ordering = ['email']
 
     fieldsets = (
-        (None, {'fields': ('email', 'name', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined','password')}),
+        (None, {'fields': ('email', 'name', 'number', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined','password')}),
     )
     
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined', 'password1', 'password2'),
+            'fields': ('email', 'name', 'number', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined', 'password1', 'password2'),
         }),
     )
 

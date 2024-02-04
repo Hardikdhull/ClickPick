@@ -46,29 +46,39 @@ const handleLogout = async () => {
         text: 'Yes',
         onPress: async () => {
           try {
+
+            await AsyncStorage.removeItem('access_token');
+            await AsyncStorage.removeItem('refresh_token');
+
             const response = await axios.post(`${url}/auth/logout/`,
               { 'refresh_token' : refresh_token }
             );
 
             if (response.status === 200) {
               // Successfully logged out on the server
-              await AsyncStorage.removeItem('access_token');
-              await AsyncStorage.removeItem('refresh_token');
-              navigation.navigate('Login');
+              // navigation.navigate('Login');
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
             } else {
               // Handle other status codes if needed
               // Proceed with logout actions
-              await AsyncStorage.removeItem('access_token');
-              await AsyncStorage.removeItem('refresh_token');
-              navigation.navigate('Login');
+              // navigation.navigate('Login');
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
             }
           } catch (error) {
             // Handle errors during logout
             console.error('Error during logout:', error);
             // Proceed with logout actions even if there's an error
-            await AsyncStorage.removeItem('access_token');
-            await AsyncStorage.removeItem('refresh_token');
-            navigation.navigate('Login');
+            // navigation.navigate('Login');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
           }
         },
       },
