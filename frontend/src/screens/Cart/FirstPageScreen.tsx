@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, TouchableOpacity, PermissionsAndroid, Platform } from 'react-native';
-import tw from 'twrnc'; // Import twrnc for styling
+import { View, Text, TextInput, Button, Alert, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import tw from 'twrnc';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const FirstPageGenerator = () => {
-
-  const url = "http://192.168.1.3:8000"
+  const url = "http://192.168.1.3:8000";
   const [form, setForm] = useState({
     subject_name: '',
     subject_code: '',
@@ -16,155 +16,89 @@ const FirstPageGenerator = () => {
     semester: '',
     group: '',
   });
-  const [downloadLink, setDownloadLink] = useState(null); // State to store the download link
-  const REMOTE_IMAGE_PATH =
-    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
-  const checkPermission = async () => {
-    // Function to check the platform
-    // If iOS then start downloading
-    // If Android then ask for permission
 
-    if (Platform.OS === 'ios') {
-      downloadImage();
-    } else {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: 'Storage Permission Required',
-            message: 'App needs access to your storage to download Photos',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          // Once user grant the permission start downloading
-          console.log('Storage Permission Granted.');
-          downloadImage();
-        } else {
-          // If permission denied then show alert
-          alert('Storage Permission Not Granted');
-        }
-      } catch (err) {
-        // To handle permission related exception
-        console.warn(err);
-      }
-    }
+  const handleInputChange = (field, value) => {
+    setForm((prevForm) => ({ ...prevForm, [field]: value }));
   };
 
   const sendFormData = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('access_token');
-      const apiUrl = `${url}/stationery/generate-firstpage/`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
+      if (!accessToken) {
+        // Handle case where access token is not available
+        console.log('Access token not found');
+        return;
+      }
+
+      const response = await RNFetchBlob.fetch(
+        'POST',
+        `${url}/stationery/generate-firstpage/`,
+        {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
-      });
+        Object.entries(form).map(([field, value]) => ({
+          name: field,
+          data: value,
+        }))
+      );
 
-      if (!response.ok) {
-        throw new Error('Failed to generate file');
-      }
+      if (response.respInfo.status === 200) {
+        const date = new Date();
+        const { filepath } = JSON.parse(response.data);
+        const path = RNFetchBlob.fs.dirs.DownloadDir;
+        const fileName = `download_${Math.floor(date.getDate() + date.getSeconds() / 2)}.docx`;
 
-      // Assuming the server response contains the file content directly
-      const fileContent = await response.blob();
-
-      // Use a Blob URL to trigger the download from the website
-      const blobUrl = URL.createObjectURL(fileContent);
-
-      // Create a hidden link and click it to trigger the download
-      const downloadLink = document.createElement('a');
-      downloadLink.href = blobUrl;
-      downloadLink.download = 'downloaded_file.docx';
-      downloadLink.click();
-
-      // Clean up the Blob URL
-      URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', error.message);
-    }
-  };
-
-  const handleInputChange = (name, value) => {
-    setForm({ ...form, [name]: value });
-  };
-
-
-  const generateFirstPage = async () => {
-    try {
-      const accessToken = await AsyncStorage.getItem('access_token');
-      const apiEndpoint = `${url}/stationery/generate-firstpage/`;
-
-      console.log('Sending request with form data:', form);
-
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
+        await RNFetchBlob.config({
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            title: fileName,
+            description: 'File download in progress',
+            path: `${path}/${fileName}`,
+            mime: 'application/msword',
+            mediaScannable: true,
+          },
+        }).fetch('POST', `${url}${filepath}`, {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
+        }, Object.entries(form).map(([field, value]) => ({
+          name: field,
+          data: value,
+        })));
 
-      console.log('Server response:', response);
-
-      if (!response.ok) {
-        throw new Error('Failed to generate first page');
+        Alert.alert('File Downloaded', 'The file has been downloaded successfully.');
+        console.log('File downloaded successfully:', `${path}/${fileName}`);
       }
-
-      // Assuming the server response contains the file content directly
-      const fileContent = await response.blob();
-
-      // Save the file using react-native-fetch-blob or any other method you prefer
-      // Update this with your preferred method for handling file downloads
-      const filePath = RNFetchBlob.fs.dirs.DownloadDir + '/downloaded_file.docx';
-      await RNFetchBlob.fs.createFile(filePath, fileContent, 'utf8');
-
-      Alert.alert(
-        'Success',
-        'Your first page is ready for download!',
-        [
-          {
-            text: 'Ok',
-            onPress: () => {
-              // You may navigate to another screen or perform additional actions here
-            },
-          },
-        ],
-        { cancelable: false }
-      );
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', error.message);
+      // Handle errors, e.g., show an error message to the user
     }
   };
 
-  const handleDownload = async () => {
+  const requestStoragePermission = async () => {
     try {
-      // Show an alert to inform the user that the file is ready for download
-      Alert.alert(
-        'Download Complete',
-        'Your file has been downloaded successfully!',
-        [
-          {
-            text: 'Ok',
-            onPress: () => {
-              // You may open the file with the default app here
-              // Note: If the file is not directly supported by the device, you may need to handle it differently
-              RNFetchBlob.android.actionViewIntent(filePath, 'application/msword');
-            },
-          },
-        ],
-        { cancelable: false }
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Downloader App Storage Permission',
+          message:
+            'Downloader App needs access to your storage ' +
+            'so you can download files',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
       );
-    } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', 'Failed to download the file');
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        await sendFormData();
+      } else {
+        console.log('Storage permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
     }
   };
-
 
   return (
     <View style={styles.container}>

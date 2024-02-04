@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items
+from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items, TempFileStorage
 from . serializers import ActiveOrdersSerializer, PastOrdersSerializer, ActivePrintoutsSerializer, PastPrintoutsSerializer, ItemsSerializer
 
 from django.core.files.storage import default_storage
@@ -242,9 +242,9 @@ class CostCalculationView(APIView):
 # To generate first page for files
 class FirstPageGenerationView(APIView):
     
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
     
-    def post(self, request):
+     def post(self, request):
         
         try:
             subject_name = request.data.get('subject_name')
@@ -260,12 +260,20 @@ class FirstPageGenerationView(APIView):
             file_path = firstpage.create_word_file(subject_name=subject_name, subject_code=subject_code,
                                 faculty_name=faculty_name, student_name=student_name, faculty_designation=faculty_designation,
                                 roll_number=roll_number, semester=semester, group=group, image_path=image_path)  
-            
-            response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename='first_page.docx')
-        
+
+            # Open the file and read its content
+            with open(file_path, 'rb') as file_content:
+                # Create a ContentFile instance
+                content_file = ContentFile(file_content.read())
+
+            # Save the ContentFile to a temporary location
+            temp_first_page = default_storage.save('temp_first_pages/' + "firstpage", content_file)
+
+            # Create a new TempFileStorage object
+            temp_file_storage = TempFileStorage.objects.create(file=temp_first_page)
+
+            response = Response({"filepath": temp_file_storage.file.url}, status=status.HTTP_200_OK)
+            print(temp_first_page)
             return response
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-              
-            
-

@@ -109,4 +109,5 @@ class PastPrintOuts(models.Model):
         verbose_name_plural = "Past Print-Outs"
 
 
-
+class TempFileStorage(models.Model):
+    file = models.FileField(upload_to=utils.temp_file_rename)
