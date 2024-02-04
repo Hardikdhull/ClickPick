@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const url = "http://192.168.1.3:8000";
+  const url = "http://192.168.1.43:8000";
 
   useEffect(() => {
     // Check if the user is logged in

@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './Profile';
 import ActiveOrdersScreen from '../Cart/ActiveOrders';
 import PastOrdersScreen from '../Cart/PastOrders';
+import LoginScreen from '../auth/LoginScreen';
 
 
 // Create a stack navigator for the Profile screens
@@ -33,6 +34,13 @@ const ProfileNavigator = () => {
           component={PastOrdersScreen}
           options={{
             headerBackTitleVisible: false, // Hide the back button title
+          }}
+        />
+        <ProfileStack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            headerShown: false, // Hide the back button title
           }}
         />
       </ProfileStack.Navigator>

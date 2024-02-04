@@ -5,7 +5,7 @@ import tw from 'twrnc';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const FirstPageGenerator = () => {
-  const url = "http://192.168.1.3:8000";
+  const url = "http://192.168.1.43:8000";
   const [form, setForm] = useState({
     subject_name: '',
     subject_code: '',
