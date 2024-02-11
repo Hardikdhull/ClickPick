@@ -6,7 +6,7 @@ import tw from 'twrnc';
 
 const PastOrdersScreen = () => {
     const [pastOrders, setPastOrders] = useState([]);
-    const url = "http://192.168.1.43:8000";
+    const url = "http://192.168.1.34:8000";
 
     useEffect(() => {
         const fetchPastOrders = async () => {

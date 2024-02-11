@@ -10,7 +10,7 @@ const PrintoutCostCalculatorScreen = () => {
   const [files, setFiles] = useState({ file1: null, file2: null });
   const [pages, setPages] = useState({ pages1: '', pages2: '' });
   const [cost, setCost] = useState(null)
-  const url = "http://192.168.1.43:8000";
+  const url = "http://192.168.1.34:8000";
 
   const handleFilePick = async (fileNumber) => {
     try {
