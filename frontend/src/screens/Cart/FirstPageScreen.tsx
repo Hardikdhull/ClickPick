@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import tw from 'twrnc';
 import RNFetchBlob from 'rn-fetch-blob';
+import { useNavigation } from '@react-navigation/native';
 
 const FirstPageGenerator = () => {
-  const url = "http://192.168.1.43:8000";
+  const url = "http://10.0.0.118:8000";
   const [form, setForm] = useState({
     subject_name: '',
     subject_code: '',
@@ -16,7 +17,7 @@ const FirstPageGenerator = () => {
     semester: '',
     group: '',
   });
-
+  const navigation = useNavigation();
   const handleInputChange = (field, value) => {
     setForm((prevForm) => ({ ...prevForm, [field]: value }));
   };
@@ -103,7 +104,11 @@ const FirstPageGenerator = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Stationery Form</Text>
-
+      <Button
+        title="Go to Printout Cost Calculator"
+        onPress={() => navigation.navigate('PrintoutCostCalculator')}
+        style={styles.navigationButton}
+      />
       <TextInput
         style={styles.input}
         placeholder="Subject Name"
@@ -187,6 +192,16 @@ const styles = {
   input: tw`bg-white p-2 rounded border border-gray-300 mb-2`,
   downloadButton: tw`bg-blue-500 p-2 rounded mt-4`,
   downloadButtonText: tw`text-white text-center`,
+  inputContainer: tw`mb-4`,
+  label: tw`mb-2`,
+  chosenFileContainer: tw`my-4 `,
+  chosenFileLabel: tw`font-bold mb-2`,
+  costContainer: tw`my-4 `,
+  costLabel: tw`font-bold mb-2`,
+  costValue: tw`text-xl`,
+  navigationButton: tw`mb-4 w-10`,
+
 };
+
 
 export default FirstPageGenerator;

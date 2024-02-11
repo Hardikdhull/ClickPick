@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const SearchScreen = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const url = "http://192.168.1.43:8000";
+  const url = "http://10.0.0.118:8000";
 
   useEffect(() => {
     const fetchSearchResults = async () => {

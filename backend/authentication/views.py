@@ -13,7 +13,7 @@ class UserDetails(APIView):
 
     # only authenticated users can access this view
     permission_classes = (IsAuthenticated,)
-
+    
     # For fetching details of the logged in user
     def get(self, request):
 

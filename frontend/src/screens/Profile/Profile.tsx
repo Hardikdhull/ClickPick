@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const [user, setUser] = useState(null);
-  const url = "http://192.168.1.43:8000";
+  const url = "http://10.0.0.118:8000";
   const navigation = useNavigation();
 
   useEffect(() => {

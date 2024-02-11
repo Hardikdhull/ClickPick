@@ -11,7 +11,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   // Access the API_URL environment variable
-  const url = "http://192.168.1.43:8000"
+  const url = "http://10.0.0.118:8000"
 
   const handleLogin = async () => {
     try {

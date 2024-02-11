@@ -9,6 +9,7 @@ import OrderScreen from '../screens/Cart/OrderScreen';
 import ProfileNavigator from '../screens/Profile/ProfileNavigator';
 import PrintoutCostCalculatorScreen from '../screens/Cart/PrintoutCost';
 import PrintoutStack from '../screens/Cart/PrintoutStack';
+import CartNavigator from '../screens/Cart/CartNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,12 +35,42 @@ const BottomTabNavigator = () => {
           return <Icon name={iconName} size={size} color={color} />;
         },
       })}
-      
     >
-      <Tab.Screen name="Home" component={HomeScreen}  />
-      <Tab.Screen name="Search" component={SearchScreen}  />
-      <Tab.Screen name="Printout" component={PrintoutStack}  />
-      <Tab.Screen name="Profile" component={ProfileNavigator} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerShown: false, // Hide the header
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          headerShown: false, // Hide the header
+        }}
+      />
+      <Tab.Screen
+        name="Printout"
+        component={PrintoutStack}
+        options={{
+          headerShown: false, // Hide the header
+        }}
+      />
+      <Tab.Screen
+        name="Cartnav"
+        component={CartNavigator}
+        options={{
+          headerShown: false, // Hide the header
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileNavigator}
+        options={{
+          headerShown: false, // Hide the header
+        }}
+      />
     </Tab.Navigator>
   );
 };
