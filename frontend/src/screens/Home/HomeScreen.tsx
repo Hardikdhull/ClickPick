@@ -10,7 +10,9 @@ import Header from '../common/Header';
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
-  const url = "http://10.0.0.118:8000"; // Update with your API URL
+  const url = "http://192.168.1.34:8000";
+
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {

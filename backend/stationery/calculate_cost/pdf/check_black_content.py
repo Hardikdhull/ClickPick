@@ -17,7 +17,8 @@ def parse_page_ranges(page_ranges):
     
     return pages_to_check
 
-def check_black_content(pdf_path, page_ranges, threshold=0.1):
+# threshold = 7.5%
+def check_black_content(pdf_path, page_ranges, threshold=0.075):
     doc = fitz.open(pdf_path)
 
     pages_to_check = parse_page_ranges(page_ranges)
@@ -29,7 +30,7 @@ def check_black_content(pdf_path, page_ranges, threshold=0.1):
         adjusted_page_num = page_num - 1  # Adjust for zero-based indexing
 
         if adjusted_page_num < 0 or adjusted_page_num >= len(doc):
-            print(f"Warning: Page {page_num} is out of range.")
+            # print(f"Warning: Page {page_num} is out of range.")
             continue
 
         page = doc.load_page(adjusted_page_num)

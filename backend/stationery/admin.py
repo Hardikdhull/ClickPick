@@ -66,6 +66,10 @@ class PastOrdersAdmin(ExportActionMixin, admin.ModelAdmin):
     # This will disable delete functionality
     def has_delete_permission(self, request, obj=None):
         return False
+    
+    # This will disable change functionality
+    def has_change_permission(self, request, obj=None):
+        return False
 
 class PastPrintoutsAdmin(admin.ModelAdmin):
     list_display = ['order_id', 'user', 'FILE', 'coloured_pages', 'black_and_white_pages', 'cost', 'custom_message', 'order_time']    
@@ -78,6 +82,10 @@ class PastPrintoutsAdmin(admin.ModelAdmin):
     
     # This will disable delete functionality
     def has_delete_permission(self, request, obj=None):
+        return False
+    
+    # This will disable change functionality
+    def has_change_permission(self, request, obj=None):
         return False
     
     def FILE(self, obj):

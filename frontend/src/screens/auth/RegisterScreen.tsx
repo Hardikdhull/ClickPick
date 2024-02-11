@@ -12,6 +12,7 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const url = "http://10.0.0.118:8000"
+  const url = "http://192.168.1.34:8000"
   const handleRegister = async () => {
     try {
       const response = await axios.post(`${url}/auth/register/`, {
