@@ -3,11 +3,11 @@ import { View, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+ 
 const Splash = () => {
   const navigation = useNavigation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const url = "http://10.0.0.118:8000"; // Update this URL if necessary
+  const url = "http://panel.mait.ac.in:8005" ; // Update this URL if necessary
 
   useEffect(() => {
     const checkLoggedInStatus = async () => {

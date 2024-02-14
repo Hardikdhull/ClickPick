@@ -14,7 +14,7 @@ const ProfileStack = createStackNavigator();
 // ProfileNavigator component
 const ProfileNavigator = () => {
     return (
-      <ProfileStack.Navigator initialRouteName="Profile">
+      <ProfileStack.Navigator>
         <ProfileStack.Screen
           name="User Info"
           component={ProfileScreen}

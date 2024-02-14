@@ -5,12 +5,12 @@ import { addToWishlist, removeFromCart } from '../redux/actions/Actions';
 import { useNavigation } from '@react-navigation/native';
 import CartItem from '../common/CartItem';
 import CommonButton from '../common/CommonButton';
-
+ 
 const CartScreen = () => {
   const cartData = useSelector(state => state.Reducers);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const url = "http://10.0.0.118:8000"
+  const url = "http://panel.mait.ac.in:8005"
   return (
     <View style={{ flex: 1 }}>
       {cartData.length > 0 ? (

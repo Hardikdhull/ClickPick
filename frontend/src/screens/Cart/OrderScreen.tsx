@@ -3,10 +3,10 @@ import { View, Text, FlatList } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tw from 'twrnc'; // Import twrnc
-
+ 
 const OrderScreen = () => {
     const [orders, setOrders] = useState([]);
-    const url = "http://10.0.0.118:8000"
+    const url = "http://panel.mait.ac.in:8005"
 
     useEffect(() => {
         const fetchOrders = async () => {

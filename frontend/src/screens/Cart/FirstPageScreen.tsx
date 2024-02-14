@@ -4,9 +4,8 @@ import { View, Text, TextInput, Button, Alert, TouchableOpacity, PermissionsAndr
 import tw from 'twrnc';
 import RNFetchBlob from 'rn-fetch-blob';
 import { useNavigation } from '@react-navigation/native';
-
 const FirstPageGenerator = () => {
-  const url = "http://10.0.0.118:8000";
+  const url = "http://panel.mait.ac.in:8005";
   const [form, setForm] = useState({
     subject_name: '',
     subject_code: '',

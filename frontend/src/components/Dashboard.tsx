@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import tw from 'twrnc';
 import BottomTabNavigator from './BottomTabNavigator';
-
+ 
 const styles = {
   container: tw`flex-1 p-4 bg-gray-200`,
   heading: tw`text-2xl font-bold mb-4`,
@@ -18,7 +18,7 @@ const styles = {
 const Dashboard = ()  => {
   const [user, setUser] = useState(null);
   const [items, setItems] = useState([]);
-  const url = "http://10.0.0.118:8000"
+  const url = "http://panel.mait.ac.in:8005"
 
   useEffect(() => {
     const fetchData = async () => {

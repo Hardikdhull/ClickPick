@@ -10,7 +10,7 @@ import Header from '../common/Header';
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
-  const url = "http://192.168.1.34:8000";
+  const url = "http://panel.mait.ac.in:8005";
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -27,6 +27,7 @@ const HomeScreen = () => {
             },
           });
           setItems(responseItems.data);
+          console.log(responseItems.data)
         }
       } catch (error) {
         console.error('Error fetching data:', error);

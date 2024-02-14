@@ -4,15 +4,14 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import tw from 'twrnc';
-
+ 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  const url = "http://10.0.0.118:8000"
-  const url = "http://192.168.1.34:8000"
+  const url = "http://panel.mait.ac.in:8005"
   const handleRegister = async () => {
     try {
       const response = await axios.post(`${url}/auth/register/`, {

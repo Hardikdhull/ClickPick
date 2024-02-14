@@ -3,12 +3,11 @@ import { View, Text, TextInput, FlatList } from 'react-native';
 import axios from 'axios';
 import tw from 'twrnc';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+ 
 const SearchScreen = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const url = "http://10.0.0.118:8000";
-  const url = "http://192.168.1.34:8000";
+  const url = "http://panel.mait.ac.in:8005";
 
   useEffect(() => {
     const fetchSearchResults = async () => {

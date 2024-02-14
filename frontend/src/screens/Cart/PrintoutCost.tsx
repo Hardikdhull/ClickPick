@@ -3,14 +3,14 @@ import { View, Text, TextInput, Button, Alert } from 'react-native';
 import DocumentPicker from 'react-native-document-picker'; // Import the DocumentPicker library
 import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
-
+ 
 const PrintoutCostCalculatorScreen = () => {
   const navigation = useNavigation(); // Get the navigation object
 
   const [files, setFiles] = useState({ file1: null, file2: null });
   const [pages, setPages] = useState({ pages1: '', pages2: '' });
   const [cost, setCost] = useState(null)
-  const url = "http://10.0.0.118:8000";
+  const url = "http://panel.mait.ac.in:8005";
 
   const handleFilePick = async (fileNumber) => {
     try {

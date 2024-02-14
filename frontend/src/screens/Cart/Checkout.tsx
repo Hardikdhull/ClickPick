@@ -12,7 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from '../common/CommonButton';
 import RazorpayCheckout from 'react-native-razorpay';
 import { useNavigation } from '@react-navigation/native';
-import { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } from '@env'
+// import { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } from '@env'
+ 
 import { addOrder } from '../redux/actions/Actions';
 const Checkout = () => {
     const cartData = useSelector(state => state.Reducers);
@@ -20,9 +21,9 @@ const Checkout = () => {
     const [selectedAddress, setSelectedAddress] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const url = "http://10.0.0.118:8000"; // Update with your API URL
-    let razorpayKeyId = RAZORPAY_KEY_ID
-    let razorpayKeySecret = RAZORPAY_KEY_SECRET
+    const url = "http://panel.mait.ac.in:8005"; // Update with your API URL
+    // let razorpayKeyId = RAZORPAY_KEY_ID
+    // let razorpayKeySecret = RAZORPAY_KEY_SECRET
 
     console.log("Cart Data:", cartData);
     console.log("Address List:", addressList);
@@ -78,7 +79,7 @@ const Checkout = () => {
                         borderTopColor: '#8e8e8e',
                     }}>
                     <Text>Total :</Text>
-                    <Text>{'रु ' + getTotal()}</Text>
+                    <Text>{'रु ' + getTotal()/100}</Text>
                 </View>
                 {/* <View>
                     <FlatList
@@ -141,7 +142,7 @@ const Checkout = () => {
                             description: 'Buy items',
                             image: 'https://i.imgur.com/3g7nmJC.png',
                             currency: 'INR',
-                            key: razorpayKeyId,
+                            key: "rzp_test_1WhP3jEX0u7tb9",
                             amount: getTotal(),
                             name: 'test order',
                             order_id: "", //Replace this with an order_id created using Orders API. Learn more at https://razorpay.com/docs/api/orders.
