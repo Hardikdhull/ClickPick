@@ -1,4 +1,4 @@
-import {View, TouchableOpacity, Text, Image} from 'react-native';
+import { View, TouchableOpacity, Text, Image } from 'react-native';
 import React from 'react';
 
 const CartItem = ({
@@ -22,16 +22,15 @@ const CartItem = ({
         backgroundColor: '#fff',
         marginBottom: 10,
       }}>
-      <View style={{width: '100%'}}>
-        {/* <Image
+      <View style={{ width: '100%' }}>
+        <Image
           source={{ uri: url + item.display_image }}
           style={{
-            width: '100%',
-            height: 140,
+            width: 70, height: 70,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           }}
-        /> */}
+        />
 
         <Text
           style={{
@@ -41,6 +40,15 @@ const CartItem = ({
             fontWeight: '600',
           }}>
           {item.item}
+        </Text>
+        <Text
+          style={{
+            marginLeft: 10,
+            fontSize: 14,
+            fontWeight: '400',
+            color: '#777',
+          }}>
+          Quantity: <Text style={{ fontWeight: '600', color: '#000' }}>{item.quantity}</Text>
         </Text>
         <View
           style={{
@@ -72,7 +80,7 @@ const CartItem = ({
               onPress={() => {
                 onAddToCart(item);
               }}>
-              <Text style={{color: '#000'}}>Add To Cart</Text>
+              <Text style={{ color: '#000' }}>Add To Cart</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -87,7 +95,7 @@ const CartItem = ({
               onPress={() => {
                 onRemoveItem();
               }}>
-              <Text style={{color: '#000'}}>Remove Item</Text>
+              <Text style={{ color: '#000' }}>Remove Item</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -110,7 +118,7 @@ const CartItem = ({
             }}>
             <Image
               source={require('../images/heart_fill.png')}
-              style={{width: 24, height: 24, tintColor: 'red'}}
+              style={{ width: 24, height: 24, tintColor: 'red' }}
             />
           </TouchableOpacity>
         ) : (
@@ -132,7 +140,7 @@ const CartItem = ({
             }}>
             <Image
               source={require('../images/heart.png')}
-              style={{width: 24, height: 24}}
+              style={{ width: 24, height: 24 }}
             />
           </TouchableOpacity>
         )}

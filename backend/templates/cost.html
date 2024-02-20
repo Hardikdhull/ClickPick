@@ -59,7 +59,7 @@
         console.log(dataToSend);
 
         // Send a POST request to the backend
-        fetch('http://localhost:8000/stationery/calculate-cost/', {
+        fetch('http://panel.mait.ac.in:8005/stationery/calculate-cost/', {
             method: 'POST',
             body: JSON.stringify(dataToSend),
             headers: {

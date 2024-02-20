@@ -27,7 +27,7 @@ const Splash = () => {
 
           console.log('User details fetched successfully:');
           setIsLoggedIn(true);
-          navigation.navigate('BottomTabs');
+          navigation.navigate('Main');
         } catch (error) {
           console.error('Error fetching user details:', error);
           setIsLoggedIn(false);

@@ -93,7 +93,7 @@ class MakeOrder(APIView):
         # key is named 'orders', value is a list of orders
         # {
         #   'orders': [ {'item' : RING_FILE, 'quantity': 2, 'cost': 40}, {'item' : PEN, 'quantity': 3, 'cost': 30}, ]
-        # }
+        # } 
 
         orders = request.data.get('orders')
 

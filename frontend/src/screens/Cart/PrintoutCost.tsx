@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
 import DocumentPicker from 'react-native-document-picker'; // Import the DocumentPicker library
+import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
-
+ 
 const PrintoutCostCalculatorScreen = () => {
   const navigation = useNavigation(); // Get the navigation object
 
-  const [files, setFiles] = useState([{ file: null, pages: '' }]);
+  const [files, setFiles] = useState({ file1: null, file2: null });
+  const [pages, setPages] = useState({ pages1: '', pages2: '' });
   const [cost, setCost] = useState(null)
   const url = "http://panel.mait.ac.in:8005";
-  const handleFilePick = async (index) => {
+
+  const handleFilePick = async (fileNumber) => {
     try {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
@@ -18,8 +21,7 @@ const PrintoutCostCalculatorScreen = () => {
       console.log('Picked file:', result);
 
       // Handle the picked file
-      const newFiles = [...files];
-      newFiles[index].file = result;
+      const newFiles = { ...files, [`file${fileNumber}`]: result };
       setFiles(newFiles);
 
       console.log('Updated files state:', newFiles);
@@ -34,16 +36,11 @@ const PrintoutCostCalculatorScreen = () => {
     }
   };
 
-  const handlePagesChange = (index, pagesValue) => {
-    const newFiles = [...files];
-    newFiles[index].pages = pagesValue;
-    setFiles(newFiles);
+  const handlePagesChange = (pageNumber, pagesValue) => {
+    const newPages = { ...pages, [`pages${pageNumber}`]: pagesValue };
+    setPages(newPages);
 
-    console.log('Updated pages state:', newFiles);
-  };
-
-  const handleAddFile = () => {
-    setFiles([...files, { file: null, pages: '' }]);
+    console.log('Updated pages state:', newPages);
   };
 
   const handleSubmit = async () => {
@@ -89,79 +86,84 @@ const PrintoutCostCalculatorScreen = () => {
       />
 
       {/* File input tags */}
-      {files.map((item, index) => (
-        <View key={index} style={styles.inputContainer}>
-          <Text style={styles.label}>File {index + 1}:</Text>
-          <Button
-            title="Choose File"
-            onPress={() => handleFilePick(index)}
-          />
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>File 1:</Text>
+        <Button
+          title="Choose File"
+          onPress={() => handleFilePick(1)}
+        />
+      </View>
 
-          {/* Display chosen file name */}
-          {item.file && item.file[0] && (
-            <View style={styles.chosenFileContainer}>
-              <Text style={styles.chosenFileLabel}>Chosen File:</Text>
-              <Text>{item.file[0].name}</Text>
-            </View>
-          )}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>File 2:</Text>
+        <Button
+          title="Choose File"
+          onPress={() => handleFilePick(2)}
+        />
+      </View>
 
-          <Text style={styles.label}>Pages:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter pages"
-            keyboardType="numeric"
-            value={item.pages}
-            onChangeText={(text) => handlePagesChange(index, text)}
-          />
-        </View>
-      ))}
+      {/* Text input tags for pages */}
+      <View style={styles.inputContainer}>
+        {/* Display chosen file names */}
+        {files.file1 && files.file1[0] && (
+          <View style={styles.chosenFileContainer}>
+            <Text style={styles.chosenFileLabel}>Chosen File 1:</Text>
+            <Text>{files.file1[0].name}</Text>
+          </View>
+        )}
+        {files.file2 && files.file2[0] && (
+          <View style={styles.chosenFileContainer}>
+            <Text style={styles.chosenFileLabel}>Chosen File 2:</Text>
+            <Text>{files.file2[0].name}</Text>
+          </View>
+        )}
 
-      <Button title="Add" onPress={handleAddFile} />
+        <Text style={styles.label}>Pages for File 1:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter pages"
+          keyboardType="numeric"
+          value={pages.pages1}
+          onChangeText={(text) => handlePagesChange(1, text)}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Pages for File 2:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter pages"
+          keyboardType="numeric"
+          value={pages.pages2}
+          onChangeText={(text) => handlePagesChange(2, text)}
+        />
+      </View>
+
       <Button title="Calculate Cost" onPress={handleSubmit} />
+      {/* Display the cost */}
+      {cost !== null && (
+        <View style={styles.costContainer}>
+          <Text style={styles.costLabel}>Total Cost:</Text>
+          <Text style={styles.costValue}>{cost}</Text>
+        </View>
+      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#F5F5F5',
-    flex: 1,
-  },
-  heading: {
-    fontWeight: 'bold',
-    fontSize: 24,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  label: {
-    marginBottom: 8,
-    fontSize: 16,
-  },
-  input: {
-    backgroundColor: '#FFFFFF',
-    padding: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#CCCCCC',
-    fontSize: 16,
-  },
-  chosenFileContainer: {
-    marginBottom: 8,
-  },
-  chosenFileLabel: {
-    fontWeight: 'bold',
-    marginBottom: 4,
-    fontSize: 16,
-  },
-  navigationButton: {
-    marginBottom: 16,
-    width: 200,
-    alignSelf: 'center',
-  },
-});
+
+const styles = {
+  container: tw`p-4 bg-gray-200 flex-1`,
+  heading: tw`font-bold text-2xl mb-4`,
+  inputContainer: tw`mb-4`,
+  label: tw`mb-2`,
+  input: tw`bg-white p-2 rounded border border-gray-300`,
+  chosenFileContainer: tw`my-4 `,
+  chosenFileLabel: tw`font-bold mb-2`,
+  costContainer: tw`my-4 `,
+  costLabel: tw`font-bold mb-2`,
+  costValue: tw`text-xl`,
+  navigationButton: tw`mb-4 w-10`,
+};
 
 export default PrintoutCostCalculatorScreen;

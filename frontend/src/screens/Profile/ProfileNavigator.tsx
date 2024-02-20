@@ -1,50 +1,34 @@
-// Import necessary libraries and components
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import ProfileScreen from './Profile';
 import ActiveOrdersScreen from '../Cart/ActiveOrders';
 import PastOrdersScreen from '../Cart/PastOrders';
-import LoginScreen from '../auth/LoginScreen';
 
-
-// Create a stack navigator for the Profile screens
-const ProfileStack = createStackNavigator();
-
-// ProfileNavigator component
 const ProfileNavigator = () => {
-    return (
-      <ProfileStack.Navigator>
-        <ProfileStack.Screen
-          name="User Info"
-          component={ProfileScreen}
-          options={{
-            headerShown: false, // Hide the header for the Profile screen
-          }}
-        />
-        <ProfileStack.Screen
-          name="ActiveOrders"
-          component={ActiveOrdersScreen}
-          options={{
-            headerBackTitleVisible: false, // Hide the back button title
-          }}
-        />
-        <ProfileStack.Screen
-          name="PastOrders"
-          component={PastOrdersScreen}
-          options={{
-            headerBackTitleVisible: false, // Hide the back button title
-          }}
-        />
-        <ProfileStack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            headerShown: false, // Hide the back button title
-          }}
-        />
-      </ProfileStack.Navigator>
-    );
-  };
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const screenNames = ['Profile', 'Active Orders', 'Past Orders'];
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', height: 50, backgroundColor: 'lightgray' }}>
+        {screenNames.map((name, index) => (
+          <TouchableOpacity key={index} onPress={() => setSelectedTab(index)}>
+            <Text style={{ fontWeight: selectedTab === index ? 'bold' : 'normal' }}>{name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={{ flex: 1 }}>
+        {selectedTab === 0 ? (
+          <ProfileScreen />
+        ) : selectedTab === 1 ? (
+          <ActiveOrdersScreen />
+        ) : selectedTab === 2 ? (
+          <PastOrdersScreen />
+        ) : null}
+      </View>
+    </View>
+  );
+};
 
 export default ProfileNavigator;

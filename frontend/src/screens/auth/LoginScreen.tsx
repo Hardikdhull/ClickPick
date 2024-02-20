@@ -25,7 +25,7 @@ const LoginScreen = () => {
         const { access, refresh } = loginResponse.data;
         await AsyncStorage.setItem('access_token', access);
         await AsyncStorage.setItem('refresh_token', refresh);
-        navigation.navigate('BottomTabs');
+        navigation.navigate('Main');
       } else {
         // Login failed, handle errors
         Alert.alert('Login Failed', 'Invalid credentials. Please check your email and password.');

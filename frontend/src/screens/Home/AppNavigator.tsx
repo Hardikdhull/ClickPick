@@ -6,6 +6,7 @@ import LoginScreen from '../auth/LoginScreen';
 import RegisterScreen from '../auth/RegisterScreen';
 import HomeScreen from './HomeScreen';
 import BottomTabNavigator from '../../components/BottomTabNavigator';
+import Main from './Main';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
@@ -28,8 +29,8 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           options={{headerShown: false}}
-          name="BottomTabs"
-          component={BottomTabNavigator}
+          name="Main"
+          component={Main}
         />
       </Stack.Navigator>
     </NavigationContainer>

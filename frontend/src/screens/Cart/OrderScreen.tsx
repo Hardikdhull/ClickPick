@@ -36,7 +36,6 @@ const OrderScreen = () => {
             <Text style={styles.orderText}>{`Order Time: ${item.order_time}`}</Text>
             <Text style={styles.orderText}>{`User ID: ${item.user}`}</Text>
             <Text style={styles.orderText}>{`Item ID: ${item.item}`}</Text>
-            {/* Add more details as needed */}
         </View>
     );
 

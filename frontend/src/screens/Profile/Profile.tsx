@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
-import tw from 'twrnc';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -29,66 +28,52 @@ const ProfileScreen = () => {
     fetchUserDetails();
   }, []);
 
-  // ... (Previous code)
+  const handleLogout = async () => {
+    const refresh_token = await AsyncStorage.getItem('refresh_token');
 
-const handleLogout = async () => {
-  const refresh_token = await AsyncStorage.getItem('refresh_token');
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem('access_token');
+              await AsyncStorage.removeItem('refresh_token');
 
-  Alert.alert(
-    'Logout',
-    'Are you sure you want to logout?',
-    [
-      {
-        text: 'No',
-        style: 'cancel',
-      },
-      {
-        text: 'Yes',
-        onPress: async () => {
-          try {
+              const response = await axios.post(`${url}/auth/logout/`,
+                { 'refresh_token': refresh_token }
+              );
 
-            await AsyncStorage.removeItem('access_token');
-            await AsyncStorage.removeItem('refresh_token');
-
-            const response = await axios.post(`${url}/auth/logout/`,
-              { 'refresh_token' : refresh_token }
-            );
-
-            if (response.status === 200) {
-              // Successfully logged out on the server
-              // navigation.navigate('Login');
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Login' }],
-              });
-            } else {
-              // Handle other status codes if needed
-              // Proceed with logout actions
-              // navigation.navigate('Login');
+              if (response.status === 200) {
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Login' }],
+                });
+              } else {
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Login' }],
+                });
+              }
+            } catch (error) {
+              console.error('Error during logout:', error);
               navigation.reset({
                 index: 0,
                 routes: [{ name: 'Login' }],
               });
             }
-          } catch (error) {
-            // Handle errors during logout
-            console.error('Error during logout:', error);
-            // Proceed with logout actions even if there's an error
-            // navigation.navigate('Login');
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Login' }],
-            });
-          }
+          },
         },
-      },
-    ],
-    { cancelable: false }
-  );
-};
-
-
-
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -96,25 +81,10 @@ const handleLogout = async () => {
         <View style={styles.profileDetails}>
           <Text style={styles.detailText}>{`Name: ${user.name}`}</Text>
           <Text style={styles.detailText}>{`Email: ${user.email}`}</Text>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('ActiveOrders')}
-          >
-            <Text style={styles.buttonText}>Active Orders</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('PastOrders')}
-          >
-            <Text style={styles.buttonText}>Past Orders</Text>
-          </TouchableOpacity>
         </View>
       )}
 
       <View style={styles.bottomContainer}>
-        {/* Logout Button */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
@@ -123,14 +93,34 @@ const handleLogout = async () => {
   );
 };
 
-const styles = {
-  container: tw`flex-1 p-4 bg-gray-200`,
-  profileDetails: tw`bg-white rounded-lg p-4 mb-4`,
-  detailText: tw`text-gray-500 mb-2`,
-  button: tw`bg-blue-500 text-white px-4 py-2 rounded-full mt-2`,
-  buttonText: tw`text-center`,
-  bottomContainer: tw`flex-1 justify-end`,
-  logoutButton: tw`bg-red-500 text-white px-4 py-2 rounded-full mt-2`,
-};
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    backgroundColor: '#E5E7EB',
+  },
+  profileDetails: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+  },
+  detailText: {
+    color: '#6B7280',
+    marginBottom: 8,
+  },
+  logoutButton: {
+    backgroundColor: '#3B82F6',
+    borderRadius: 9999,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  bottomContainer: {
+    justifyContent: 'flex-end',
+  },
+});
 
 export default ProfileScreen;

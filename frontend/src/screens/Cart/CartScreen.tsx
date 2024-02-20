@@ -13,6 +13,7 @@ const CartScreen = () => {
   const url = "http://panel.mait.ac.in:8005"
   return (
     <View style={{ flex: 1 }}>
+       <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}>Your Cart</Text>
       {cartData.length > 0 ? (
         <FlatList style = {{marginTop : 40}}
           data={cartData}
@@ -33,11 +34,11 @@ const CartScreen = () => {
         />
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>No Items Added in CartScreen</Text>
+          <Text>No Items Added in Cart</Text>
         </View>
       )}
       {cartData.length > 0 ? (
-        <View style={{ marginBottom: 40 }}>
+        <View style={{ marginBottom: 100 }}>
           <CommonButton
             bgColor={'green'}
             textColor={'#fff'}

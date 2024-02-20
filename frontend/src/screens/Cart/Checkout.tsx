@@ -13,10 +13,12 @@ import CustomButton from '../common/CommonButton';
 import RazorpayCheckout from 'react-native-razorpay';
 import { useNavigation } from '@react-navigation/native';
 // import { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } from '@env'
- 
 import { addOrder } from '../redux/actions/Actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Checkout = () => {
     const cartData = useSelector(state => state.Reducers);
+    console.log(cartData)
     const addressList = useSelector(state => state.AddressReducers);
     const [selectedAddress, setSelectedAddress] = useState('');
     const dispatch = useDispatch();
@@ -26,22 +28,35 @@ const Checkout = () => {
     // let razorpayKeySecret = RAZORPAY_KEY_SECRET
 
     console.log("Cart Data:", cartData);
+    const orders = cartData.map(item => ({
+        item: item.item,
+        quantity: item.quantity, // Use the quantity from the cart directly
+        cost: parseFloat(item.price) * parseFloat(item.quantity), // Calculate cost based on item price and quantity
+        custom_message: ""
+    }));
+    orders.forEach(order => {
+        order.cost = parseFloat(order.cost).toFixed(2);
+    });
+    console.log(orders)
     console.log("Address List:", addressList);
     const getTotal = () => {
         let tempTotal = 0;
         cartData.forEach(item => {
             // Convert the price string to a number and add it to tempTotal
-            tempTotal += parseFloat(item.price) * 100; // Convert to paise
+            tempTotal += parseFloat(item.price) * item.quantity * 100; // Convert to paise
         });
         return tempTotal; // Return the total amount in paise as an integer
-    };    
+    };
+
+    const accessToken = AsyncStorage.getItem('access_token');
 
     console.log("Total:", getTotal());
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
-                <View>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}>Checkout</Text>
+                <View style={{ flex: 1, maxHeight: '90%' }}>
                     <FlatList
                         data={cartData}
                         renderItem={({ item, index }) => {
@@ -54,17 +69,19 @@ const Checkout = () => {
                                         marginTop: 10,
                                     }}>
                                     <Image
-                                        source={{ uri: url + '/' + item.display_image }}
+                                        source={{ uri: url + item.display_image }}
                                         style={{ width: 70, height: 70, marginLeft: 10 }}
                                     />
-                                    <View style={{ padding: 10 }}>
+                                    <View style={{ }}>
                                         <Text style={{ fontSize: 18 }}>{item.item}</Text>
-                                        <Text style={{ marginTop: 10 }}>{'रु ' + item.price }</Text>
+                                        <Text style={{ marginTop: 5 }}>Quantity: <Text style={{ fontWeight: 'bold', color: '#000' }}>{item.quantity}</Text></Text>
+                                        <Text style={{ marginTop: 5 }}>{'रु ' + item.price}</Text>
                                     </View>
                                 </View>
                             );
                         }}
                     />
+
                 </View>
                 <View
                     style={{
@@ -73,13 +90,12 @@ const Checkout = () => {
                         alignItems: 'center',
                         paddingLeft: 20,
                         paddingRight: 20,
-                        marginTop: 30,
                         borderTopWidth: 0.5,
                         height: 50,
                         borderTopColor: '#8e8e8e',
                     }}>
                     <Text>Total :</Text>
-                    <Text>{'रु ' + getTotal()/100}</Text>
+                    <Text>{'रु ' + getTotal() / 100}</Text>
                 </View>
                 {/* <View>
                     <FlatList
@@ -133,37 +149,43 @@ const Checkout = () => {
                         ? 'Please Select Address From Above List'
                         : selectedAddress}
                 </Text> */}
-                <CustomButton
-                    bgColor={'#000'}
-                    textColor={'#fff'}
-                    title={'Place Order'}
-                    onPress={() => {
-                        var options = {
-                            description: 'Buy items',
-                            image: 'https://i.imgur.com/3g7nmJC.png',
-                            currency: 'INR',
-                            key: "rzp_test_1WhP3jEX0u7tb9",
-                            amount: getTotal(),
-                            name: 'test order',
-                            order_id: "", //Replace this with an order_id created using Orders API. Learn more at https://razorpay.com/docs/api/orders.
-                            prefill: {
-                              email: 'xyz@gmail.com',
-                              contact: '9999999999',
-                              name: 'User 1'
-                            },
-                            theme: { color: '#F37254' }
-                          }
-                          RazorpayCheckout.open(options).then((data) => {
-                            // handle success
-                            alert(`Success: ${data.razorpay_payment_id}`);
-                          })
-                            .catch((error) => {
-                              // handle failure
-                              console.log(error)
-                              alert(`Error: ${error.code} | ${error.description}`);
+                <View style={{ marginBottom: 100 }}>
+                    <CustomButton
+                        bgColor={'#000'}
+                        textColor={'#fff'}
+                        title={'Place Order'}
+                        onPress={() => {
+
+
+                            console.log('Sending request to create order:', orders);
+
+                            fetch(`${url}/stationery/create-order/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ orders }),
                             })
-                    }}
-                />
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.json();
+                                    }
+                                    throw new Error('Failed to create order');
+                                })
+                                .then(data => {
+                                    console.log('Order created successfully:', data);
+                                    // Handle success, e.g., navigate to a success page
+                                })
+                                .catch(error => {
+                                    console.error('Error creating order:', error);
+                                    // Handle error, e.g., show an alert
+                                    Alert.alert('Error', 'Failed to create order. Please try again.');
+                                });
+                        }}
+                    />
+                </View>
+
             </View>
         </SafeAreaView>
     );
