@@ -165,6 +165,7 @@ class CostCalculationView(APIView):
         # Get the files array, b&w pages array, and coloured pages array
         files = request.FILES.getlist('files')
         pages = request.data.getlist('pages')
+        coloured_pages = request.data.getlist('colouredpages')
 
         # initialize the cost to 0
         cost = 0
@@ -176,6 +177,7 @@ class CostCalculationView(APIView):
             for i in range(n):
                 file = files[i]
                 page = pages[i]
+                coloured_page = coloured_pages[i]
 
                 # Save the file temporarily
                 temp_file = default_storage.save('temp_files/' + file.name, ContentFile(file.read()))
@@ -192,6 +194,7 @@ class CostCalculationView(APIView):
 
                     cost += 2.0 * len(non_black_pages)
                     cost += 5.0 * len(black_pages)
+                    cost += 10.0 * len(parse_page_ranges(coloured_page))
   
                     # Delete the temporarily saved file
                     default_storage.delete(temp_file)
@@ -231,6 +234,7 @@ class CostCalculationView(APIView):
 
                             cost += 2.0 * len(non_black_pages)
                             cost += 5.0 * len(black_pages)
+                            cost += 10.0 * len(parse_page_ranges(coloured_page))
                         
                         os.remove(pdf_path)
 
