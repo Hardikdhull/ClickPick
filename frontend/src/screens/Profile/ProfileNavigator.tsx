@@ -5,27 +5,25 @@ import ActiveOrdersScreen from '../Cart/ActiveOrders';
 import PastOrdersScreen from '../Cart/PastOrders';
 
 const ProfileNavigator = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState('Profile');
 
-  const screenNames = ['Profile', 'Active Orders', 'Past Orders'];
+  const handleTabPress = (tabName) => {
+    setSelectedTab(tabName);
+  };
 
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', height: 50, backgroundColor: 'lightgray' }}>
-        {screenNames.map((name, index) => (
-          <TouchableOpacity key={index} onPress={() => setSelectedTab(index)}>
-            <Text style={{ fontWeight: selectedTab === index ? 'bold' : 'normal' }}>{name}</Text>
+        {['Profile', 'Active Orders', 'Past Orders'].map((name) => (
+          <TouchableOpacity key={name} onPress={() => handleTabPress(name)}>
+            <Text style={{ fontWeight: selectedTab === name ? 'bold' : 'normal' }}>{name}</Text>
           </TouchableOpacity>
         ))}
       </View>
       <View style={{ flex: 1 }}>
-        {selectedTab === 0 ? (
-          <ProfileScreen />
-        ) : selectedTab === 1 ? (
-          <ActiveOrdersScreen />
-        ) : selectedTab === 2 ? (
-          <PastOrdersScreen />
-        ) : null}
+        {selectedTab === 'Profile' && <ProfileScreen />}
+        {selectedTab === 'Active Orders' && <ActiveOrdersScreen />}
+        {selectedTab === 'Past Orders' && <PastOrdersScreen />}
       </View>
     </View>
   );

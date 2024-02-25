@@ -20,14 +20,18 @@ export const Reducers = (state = [], action) => {
       // Item doesn't exist in the cart, add it
       return [...state, { ...action.payload, quantity: 1 }];
 
-    case REMOVE_FROM_CART:
-      const deleteArray1 = state.filter((item, index) => {
-        return index !== action.payload;
-      });
-
-      return deleteArray1;
-    default:
-      return state;
+      case REMOVE_FROM_CART:
+        const updatedCart = state.map(item => {
+          if (item.id === action.payload && item.quantity > 1) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
+        });
+  
+        return updatedCart.filter(item => item.quantity !== 0);
+  
+      default:
+        return state;
   }
 };
 

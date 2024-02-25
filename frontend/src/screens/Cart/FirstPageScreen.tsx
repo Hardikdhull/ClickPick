@@ -102,12 +102,7 @@ const FirstPageGenerator = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Stationery Form</Text>
-      <Button
-        title="Go to Printout Cost Calculator"
-        onPress={() => navigation.navigate('PrintoutCostCalculator')}
-        style={styles.navigationButton}
-      />
+
       <TextInput
         style={styles.input}
         placeholder="Subject Name"
@@ -165,7 +160,8 @@ const FirstPageGenerator = () => {
         onChangeText={(text) => handleInputChange('group', text)}
       />
 
-      <Button title="Generate First Page" onPress={sendFormData} />
+      <Button title="Generate First Page" onPress={sendFormData} style={styles.button} />
+
       {/* Conditionally render the download button */}
       {/* {downloadLink && (
         <TouchableOpacity onPress={()=>
@@ -186,20 +182,25 @@ const FirstPageGenerator = () => {
 };
 
 const styles = {
-  container: tw`p-4 bg-gray-200 flex-1`,
-  heading: tw`font-bold text-2xl mb-4`,
-  input: tw`bg-white p-2 rounded border border-gray-300 mb-2`,
-  downloadButton: tw`bg-blue-500 p-2 rounded mt-4`,
-  downloadButtonText: tw`text-white text-center`,
-  inputContainer: tw`mb-4`,
-  label: tw`mb-2`,
-  chosenFileContainer: tw`my-4 `,
-  chosenFileLabel: tw`font-bold mb-2`,
-  costContainer: tw`my-4 `,
-  costLabel: tw`font-bold mb-2`,
-  costValue: tw`text-xl`,
-  navigationButton: tw`mb-4 w-10`,
-
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: 'white',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 10,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: 'black',
+    color: 'white',
+    padding: 10,
+    textAlign: 'center',
+    borderRadius: 5,
+    marginTop: 20,
+  },
 };
 
 

@@ -1,29 +1,31 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import FirstPageGenerator from './FirstPageScreen';
 import PrintoutCostCalculatorScreen from './PrintoutCost';
 
-const Stack = createStackNavigator();
+const PrintOutNavigator = () => {
+  const [selectedTab, setSelectedTab] = useState(0);
 
-const PrintoutStack = () => {
+  const screenNames = ['Printout Cost Calculator', 'First Page Generator'];
+
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="PrintoutCostCalculator"
-        component={PrintoutCostCalculatorScreen} // Fix the import typo here
-        options={{
-          headerShown: false, // Hide the back button title
-        }}
-      />
-      <Stack.Screen
-        name="FirstPageGenerator"
-        component={FirstPageGenerator}
-        options={{
-          headerShown: false, // Hide the back button title
-        }}
-      />
-    </Stack.Navigator>
+    <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', height: 50, backgroundColor: 'lightgray' }}>
+        {screenNames.map((name, index) => (
+          <TouchableOpacity key={index} onPress={() => setSelectedTab(index)}>
+            <Text style={{ fontWeight: selectedTab === index ? 'bold' : 'normal' }}>{name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={{ flex: 1 }}>
+        {selectedTab === 0 ? (
+          <PrintoutCostCalculatorScreen />
+        ) : selectedTab === 1 ? (
+          <FirstPageGenerator />
+        ) : null}
+      </View>
+    </View>
   );
 };
 
-export default PrintoutStack;
+export default PrintOutNavigator;

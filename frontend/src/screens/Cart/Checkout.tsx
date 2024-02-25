@@ -20,7 +20,6 @@ const Checkout = () => {
     const cartData = useSelector(state => state.Reducers);
     console.log(cartData)
     const addressList = useSelector(state => state.AddressReducers);
-    const [selectedAddress, setSelectedAddress] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const url = "http://panel.mait.ac.in:8005"; // Update with your API URL
@@ -28,16 +27,6 @@ const Checkout = () => {
     // let razorpayKeySecret = RAZORPAY_KEY_SECRET
 
     console.log("Cart Data:", cartData);
-    const orders = cartData.map(item => ({
-        item: item.item,
-        quantity: item.quantity, // Use the quantity from the cart directly
-        cost: parseFloat(item.price) * parseFloat(item.quantity), // Calculate cost based on item price and quantity
-        custom_message: ""
-    }));
-    orders.forEach(order => {
-        order.cost = parseFloat(order.cost).toFixed(2);
-    });
-    console.log(orders)
     console.log("Address List:", addressList);
     const getTotal = () => {
         let tempTotal = 0;
@@ -48,7 +37,6 @@ const Checkout = () => {
         return tempTotal; // Return the total amount in paise as an integer
     };
 
-    const accessToken = AsyncStorage.getItem('access_token');
 
     console.log("Total:", getTotal());
 
@@ -72,7 +60,7 @@ const Checkout = () => {
                                         source={{ uri: url + item.display_image }}
                                         style={{ width: 70, height: 70, marginLeft: 10 }}
                                     />
-                                    <View style={{ }}>
+                                    <View style={{}}>
                                         <Text style={{ fontSize: 18 }}>{item.item}</Text>
                                         <Text style={{ marginTop: 5 }}>Quantity: <Text style={{ fontWeight: 'bold', color: '#000' }}>{item.quantity}</Text></Text>
                                         <Text style={{ marginTop: 5 }}>{'रु ' + item.price}</Text>
@@ -154,37 +142,74 @@ const Checkout = () => {
                         bgColor={'#000'}
                         textColor={'#fff'}
                         title={'Place Order'}
-                        onPress={() => {
+                        onPress={async () => {
+                            const accessToken = await AsyncStorage.getItem('access_token');
 
-
-                            console.log('Sending request to create order:', orders);
-
-                            fetch(`${url}/stationery/create-order/`, {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${accessToken}`,
-                                    'Content-Type': 'application/json',
+                            var options = {
+                                description: 'Buy items',
+                                image: 'https://i.imgur.com/3g7nmJC.png',
+                                currency: 'INR',
+                                key: "rzp_test_1WhP3jEX0u7tb9",
+                                amount: getTotal(),
+                                name: 'test order',
+                                order_id: "", // Replace this with an order_id created using Orders API.
+                                prefill: {
+                                    email: 'xyz@gmail.com',
+                                    contact: '9999999999',
+                                    name: 'User 1'
                                 },
-                                body: JSON.stringify({ orders }),
-                            })
-                                .then(response => {
+                                theme: { color: '#F37254' }
+                            }
+
+                            RazorpayCheckout.open(options).then(async (data) => {
+                                // handle success
+                                alert(`Success: ${data.razorpay_payment_id}`);
+
+                                // Create order after successful payment
+                                const orders = cartData.map(item => ({
+                                    item: item.item,
+                                    quantity: item.quantity,
+                                    cost: parseFloat(item.price) * parseFloat(item.quantity),
+                                    custom_message: ""
+                                }));
+
+                                console.log('Sending request to create order:', orders);
+
+                                try {
+                                    const response = await fetch(`${url}/stationery/create-order/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Authorization': `Bearer ${accessToken}`,
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({ orders }),
+                                    });
+
+                                    console.log('Response status code:', response.status);
+
                                     if (response.ok) {
-                                        return response.json();
+                                        const data = await response.json();
+                                        console.log('Order created successfully:', data);
+                                    } else {
+                                        throw new Error('Failed to create order');
                                     }
-                                    throw new Error('Failed to create order');
-                                })
-                                .then(data => {
-                                    console.log('Order created successfully:', data);
-                                    // Handle success, e.g., navigate to a success page
-                                })
-                                .catch(error => {
+                                } catch (error) {
                                     console.error('Error creating order:', error);
                                     // Handle error, e.g., show an alert
                                     Alert.alert('Error', 'Failed to create order. Please try again.');
-                                });
+                                }
+                            }).catch((error) => {
+                                // handle failure
+                                console.log(error)
+                                alert(`Error: ${error.code} | ${error.description}`);
+                            });
                         }}
                     />
                 </View>
+
+
+
+
 
             </View>
         </SafeAreaView>

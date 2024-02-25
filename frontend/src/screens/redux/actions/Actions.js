@@ -13,9 +13,10 @@ export const addItemToCart = data => ({
   type: ADD_TO_CART,
   payload: data,
 });
-export const removeFromCart = index => ({
+
+export const removeFromCart = data => ({
   type: REMOVE_FROM_CART,
-  payload: index,
+  payload: data,
 });
 
 export const addToWishlist = data => ({

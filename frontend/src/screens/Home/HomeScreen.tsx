@@ -18,7 +18,7 @@ const HomeScreen = () => {
     const fetchData = async () => {
       try {
         const accessToken = await AsyncStorage.getItem('access_token');
-
+        console.log(accessToken)
         if (accessToken) {
           const responseItems = await axios.get(`${url}/stationery/item-list/`, {
             headers: {

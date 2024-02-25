@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Alert, ScrollView } from 'react-native';
 import DocumentPicker from 'react-native-document-picker'; // Import the DocumentPicker library
-import tw from 'twrnc';
-import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
- 
-const PrintoutCostCalculatorScreen = () => {
-  const navigation = useNavigation(); // Get the navigation object
 
-  const [files, setFiles] = useState({ file1: null, file2: null });
-  const [pages, setPages] = useState({ pages1: '', pages2: '' });
-  const [cost, setCost] = useState(null)
+const PrintoutCostCalculatorScreen = () => {
+  const [files, setFiles] = useState({ file1: null, file2: null, file3: null, file4: null });
+  const [pages, setPages] = useState({ pages1: '', pages2: '', pages3: '', pages4: '' });
+  const [colouredPages, setColouredPages] = useState({ colouredPages1: '', colouredPages2: '', colouredPages3: '', colouredPages4: '' });
+  const [cost, setCost] = useState(null);
+
   const url = "http://panel.mait.ac.in:8005";
 
   const handleFilePick = async (fileNumber) => {
@@ -43,22 +41,32 @@ const PrintoutCostCalculatorScreen = () => {
     console.log('Updated pages state:', newPages);
   };
 
+  const handleColouredPagesChange = (pageNumber, colouredPagesValue) => {
+    const newColouredPages = { ...colouredPages, [`colouredPages${pageNumber}`]: colouredPagesValue };
+    setColouredPages(newColouredPages);
+
+    console.log('Updated colored pages state:', newColouredPages);
+  };
+
   const handleSubmit = async () => {
     const formData = new FormData();
 
     Object.keys(files).forEach((key) => {
       const file = files[key];
       const pageKey = key.replace('file', 'pages');
+      const colouredPageKey = key.replace('file', 'colouredPages');
       const pagesValue = pages[pageKey];
+      const colouredPagesValue = colouredPages[colouredPageKey];
 
       if (file) {
         formData.append('files', file[0]); // Update this line to append file with its name
         formData.append('pages', pagesValue);
+        formData.append('colouredpages', colouredPagesValue);
       }
     });
 
     try {
-      console.log(formData)
+      console.log(formData);
       const response = await fetch(`${url}/stationery/calculate-cost/`, {
         method: 'POST',
         body: formData,
@@ -76,70 +84,46 @@ const PrintoutCostCalculatorScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Printout Cost Calculator</Text>
-      {/* Button to navigate to FirstPageGenerator */}
-      <Button
-        title="Go to First Page Generator"
-        onPress={() => navigation.navigate('FirstPageGenerator')}
-        style={styles.navigationButton}
-      />
+    <ScrollView contentContainerStyle={styles.container}>
 
       {/* File input tags */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>File 1:</Text>
-        <Button
-          title="Choose File"
-          onPress={() => handleFilePick(1)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>File 2:</Text>
-        <Button
-          title="Choose File"
-          onPress={() => handleFilePick(2)}
-        />
-      </View>
-
-      {/* Text input tags for pages */}
-      <View style={styles.inputContainer}>
-        {/* Display chosen file names */}
-        {files.file1 && files.file1[0] && (
-          <View style={styles.chosenFileContainer}>
-            <Text style={styles.chosenFileLabel}>Chosen File 1:</Text>
-            <Text>{files.file1[0].name}</Text>
+      {[1, 2, 3, 4].map((fileNumber) => (
+        <View key={fileNumber} style={styles.inputContainer}>
+          <Text style={styles.label}>File {fileNumber}:</Text>
+          <View style={styles.filePickerContainer}>
+            <Button 
+              title="Choose File"
+              onPress={() => handleFilePick(fileNumber)}
+            />
+            {files[`file${fileNumber}`] && files[`file${fileNumber}`][0] && (
+              <Text style ={{width: "50%"}}>{files[`file${fileNumber}`][0].name}</Text>
+            )}
           </View>
-        )}
-        {files.file2 && files.file2[0] && (
-          <View style={styles.chosenFileContainer}>
-            <Text style={styles.chosenFileLabel}>Chosen File 2:</Text>
-            <Text>{files.file2[0].name}</Text>
-          </View>
-        )}
 
-        <Text style={styles.label}>Pages for File 1:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter pages"
-          keyboardType="numeric"
-          value={pages.pages1}
-          onChangeText={(text) => handlePagesChange(1, text)}
-        />
-      </View>
+          {/* Text input tags for black and white pages */}
+          <Text style={styles.label}>Black and White Pages for File {fileNumber}:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Black and White pages"
+            keyboardType="numeric"
+            value={pages[`pages${fileNumber}`]}
+            onChangeText={(text) => handlePagesChange(fileNumber, text)}
+          />
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Pages for File 2:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter pages"
-          keyboardType="numeric"
-          value={pages.pages2}
-          onChangeText={(text) => handlePagesChange(2, text)}
-        />
-      </View>
+          {/* Text input tags for colored pages */}
+          <Text style={styles.label}>Colored Pages for File {fileNumber}:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Colored pages"
+            keyboardType="numeric"
+            value={colouredPages[`colouredPages${fileNumber}`]}
+            onChangeText={(text) => handleColouredPagesChange(fileNumber, text)}
+          />
+        </View>
+      ))}
 
       <Button title="Calculate Cost" onPress={handleSubmit} />
+
       {/* Display the cost */}
       {cost !== null && (
         <View style={styles.costContainer}>
@@ -147,23 +131,59 @@ const PrintoutCostCalculatorScreen = () => {
           <Text style={styles.costValue}>{cost}</Text>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
-
 const styles = {
-  container: tw`p-4 bg-gray-200 flex-1`,
-  heading: tw`font-bold text-2xl mb-4`,
-  inputContainer: tw`mb-4`,
-  label: tw`mb-2`,
-  input: tw`bg-white p-2 rounded border border-gray-300`,
-  chosenFileContainer: tw`my-4 `,
-  chosenFileLabel: tw`font-bold mb-2`,
-  costContainer: tw`my-4 `,
-  costLabel: tw`font-bold mb-2`,
-  costValue: tw`text-xl`,
-  navigationButton: tw`mb-4 w-10`,
+  container: {
+    padding: 20,
+    paddingBottom: 100, // Add padding bottom to leave space for the bottom button
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 10,
+    marginBottom: 10,
+    height: 40, // Set a fixed height for the input
+  },
+  filePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 10,
+    marginBottom: 10,
+  },
+  costContainer: {
+    marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: 'black',
+    paddingTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  costLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  costValue: {
+    fontSize: 16,
+  },
 };
 
 export default PrintoutCostCalculatorScreen;

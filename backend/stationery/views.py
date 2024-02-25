@@ -118,7 +118,7 @@ class MakeOrder(APIView):
 # To create a single printout order    
 class MakePrintout(APIView):
 
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
 
     def post(self, request):
 
