@@ -122,24 +122,28 @@ class MakePrintout(APIView):
 
     def post(self, request):
 
-        data = request.data
-        data._mutable = True
-        data['user'] = request.user
-        data['cost'] = float(request.data.get('cost'))
-        data._mutable = False
+        files = request.FILES.getlist('files')  # Assuming 'files' is the key for the file upload
 
-        serializer = ActivePrintoutsSerializer(data=data)
+        for file in files:
+            data = {
+                'user': request.user.pk,
+                'coloured_pages': request.data.get('coloured_pages'),
+                'black_and_white_pages': request.data.get('black_and_white_pages'),
+                'cost': float(request.data.get('cost')),
+                'custom_message': request.data.get('custom_message'),
+                'file': file,
+            }
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message': 'Printout Order Created Successfully'}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({'message': 'Printout Order Creation Failed'}, status=status.HTTP_400_BAD_REQUEST)
-   
-   
-   
+            serializer = ActivePrintoutsSerializer(data=data)
+
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response({'message': 'Printout Order Creation Failed'}, status=status.HTTP_400_BAD_REQUEST)
         
-        
+        return Response({'message': 'Printout Orders Created Successfully'}, status=status.HTTP_201_CREATED)
+
+
 def parse_page_ranges(page_ranges):
     pages_to_check = []
 

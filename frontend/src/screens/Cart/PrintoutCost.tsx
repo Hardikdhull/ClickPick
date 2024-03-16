@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, ScrollView } from 'react-native';
 import DocumentPicker from 'react-native-document-picker'; // Import the DocumentPicker library
+import { usePrintoutContext } from '../context/PrinoutContext'; // Import the context
+import { useNavigation } from '@react-navigation/native';
 
 const PrintoutCostCalculatorScreen = () => {
-  const [files, setFiles] = useState({ file1: null, file2: null, file3: null, file4: null });
-  const [pages, setPages] = useState({ pages1: '', pages2: '', pages3: '', pages4: '' });
-  const [colouredPages, setColouredPages] = useState({ colouredPages1: '', colouredPages2: '', colouredPages3: '', colouredPages4: '' });
+  const { setPrintout } = usePrintoutContext();
+  const [files, setFiles] = useState({ file1: null });
+  const [pages, setPages] = useState({ pages1: ''});
+  const [colouredPages, setColouredPages] = useState({ colouredPages1: ''});
   const [cost, setCost] = useState(null);
-
+  const navigation = useNavigation();
   const url = "http://panel.mait.ac.in:8005";
 
   const handleFilePick = async (fileNumber) => {
@@ -20,6 +23,7 @@ const PrintoutCostCalculatorScreen = () => {
 
       // Handle the picked file
       const newFiles = { ...files, [`file${fileNumber}`]: result };
+      
       setFiles(newFiles);
 
       console.log('Updated files state:', newFiles);
@@ -57,7 +61,7 @@ const PrintoutCostCalculatorScreen = () => {
       const colouredPageKey = key.replace('file', 'colouredPages');
       const pagesValue = pages[pageKey];
       const colouredPagesValue = colouredPages[colouredPageKey];
-
+      console.log(files)
       if (file) {
         formData.append('files', file[0]); // Update this line to append file with its name
         formData.append('pages', pagesValue);
@@ -71,12 +75,22 @@ const PrintoutCostCalculatorScreen = () => {
         method: 'POST',
         body: formData,
       });
-
       const data = await response.json();
-      Alert.alert('Cost Calculation Result', `Total Cost: ${data.cost}`);
-      console.log(data);
+      console.log("Data from calculate cost" ,data)
       // Display the cost in the UI
       setCost(data.cost); // Update the property name according to the server response
+      
+      // Set printout data in the context
+      setPrintout({
+        cost: data.cost,
+        file: files,
+        fileMeta: files.file1,
+        colouredPages: colouredPages.colouredPages1,
+        blackAndWhitePages: pages.pages1,
+      });
+      // console.log(data.cost , files,colouredPages,pages)
+      
+      navigation.navigate('CheckoutPrintout');
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', 'Failed to calculate cost. Please try again.');
@@ -87,7 +101,7 @@ const PrintoutCostCalculatorScreen = () => {
     <ScrollView contentContainerStyle={styles.container}>
 
       {/* File input tags */}
-      {[1, 2, 3, 4].map((fileNumber) => (
+      {[1].map((fileNumber) => (
         <View key={fileNumber} style={styles.inputContainer}>
           <Text style={styles.label}>File {fileNumber}:</Text>
           <View style={styles.filePickerContainer}>

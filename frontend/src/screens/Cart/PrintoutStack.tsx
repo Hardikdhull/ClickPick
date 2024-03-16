@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import FirstPageGenerator from './FirstPageScreen';
 import PrintoutCostCalculatorScreen from './PrintoutCost';
+import PrintoutCheckout from './PrintoutCheckout';
+import PrintoutStackNavigator from './PrintoutMainStack';
 
 const PrintOutNavigator = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -19,10 +21,10 @@ const PrintOutNavigator = () => {
       </View>
       <View style={{ flex: 1 }}>
         {selectedTab === 0 ? (
-          <PrintoutCostCalculatorScreen />
+          <PrintoutStackNavigator />
         ) : selectedTab === 1 ? (
           <FirstPageGenerator />
-        ) : null}
+        ) :null}
       </View>
     </View>
   );

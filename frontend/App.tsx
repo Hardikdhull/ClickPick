@@ -3,13 +3,16 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import { store } from './src/screens/redux/store/Store';
 import MainContainer from './src/screens/Home/MainContainer';
+import { PrintoutProvider } from './src/screens/context/PrinoutContext';
 
 
 
 const App = () => {
   return (
     <Provider store={store}>
-      <MainContainer />
+      <PrintoutProvider>
+        <MainContainer />
+      </PrintoutProvider>
     </Provider>
   );
 };
