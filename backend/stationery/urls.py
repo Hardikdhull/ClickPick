@@ -10,10 +10,11 @@ urlpatterns = [
     path('active-printouts/', views.GetActivePrintouts.as_view(), name='get_active_printouts'),
     path('past-printouts/', views.GetPastPrintouts.as_view(), name='get_past_printouts'),
     # post views:
-    path('create-order/', views.MakeOrder.as_view(), name='create_order'),
-    path('create-printout/', views.MakePrintout.as_view(), name='create_printout'),
+    path('create-order/', views.CreateOrder.as_view(), name='create_order'),
+    path('create-printout/', views.CreatePrintout.as_view(), name='create_printout'),
     path('calculate-cost/', views.CostCalculationView.as_view(), name='calculate_cost'),
     path('generate-firstpage/', views.FirstPageGenerationView.as_view(), name='generate_firstpage'),
+    path('img-to-pdf/', views.ImageToPdfAPIView.as_view(), name='img_to_pdf'),
     # admin panel deletion relaed views :
     path('delete_active_order/<int:order_id>/', admin_utils.delete_active_order, name='delete_active_order'),
     path('delete_active_printout/<int:order_id>/', admin_utils.delete_active_printout, name='delete_active_printout'),

@@ -31,7 +31,7 @@ class ActiveOrdersAdmin(admin.ModelAdmin):
     delete_button.short_description = "Mark order as past"
 
 class ActivePrintoutsAdmin(admin.ModelAdmin):
-    list_display = ['order_id', 'user', 'FILE', 'coloured_pages', 'black_and_white_pages', 'cost', 'custom_message', 'order_time', 'delete_button']
+    list_display = ['order_id', 'user', 'FILE', 'coloured_pages', 'black_and_white_pages', 'print_on_one_side', 'cost', 'custom_message', 'order_time', 'delete_button']
     
     # Overriding get_actions to remove default delete action because we have implemented custom delete
     def get_actions(self, request):

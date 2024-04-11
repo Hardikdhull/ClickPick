@@ -68,8 +68,8 @@ class CustomUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ['email', 'name', 'role']
-    ordering = ['email']
+    list_display = ['name', 'email', 'role']
+    ordering = ['name']
 
     fieldsets = (
         (None, {'fields': ('email', 'name', 'number', 'role', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'is_staff', 'is_active', 'date_joined','password')}),

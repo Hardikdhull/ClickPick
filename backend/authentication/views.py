@@ -69,9 +69,8 @@ class UserLogin(TokenObtainPairView):
 
             return Response(token.data, status=status.HTTP_200_OK)
         else:
-                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
             
-
 class UserLogout(APIView):
 
     def post(self, request):
