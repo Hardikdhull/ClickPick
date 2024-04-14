@@ -14,9 +14,7 @@ from pathlib import Path
 
 from math import ceil
 
-from .calculate_cost.pdf import check_black_content
-from .calculate_cost.word import word_to_images
-from .calculate_cost.word import images_to_pdfs
+from .calculate_cost import check_black_content
 from .generate_firstpage import firstpage
 
 
@@ -293,10 +291,6 @@ class CostCalculationView(APIView):
         files = request.FILES.getlist('files')
         pages = request.data.getlist('pages')
         coloured_pages = request.data.getlist('colouredpages')
-        
-        print(str(files))
-        print(str(pages))
-        print(str(coloured_pages))
 
         # initialize the cost to 0
         cost = 0
@@ -333,44 +327,32 @@ class CostCalculationView(APIView):
                 # if the file is a word document
                 elif (extension.lower() == 'docx'):
                     
-                    # Convert word file to images and get word document length as return value
-                    doc_length = word_to_images.word_to_images(temp_path)
+                    # Convert DOCX to PDF using the utility function
+                    pdf_data = convert_docx_to_pdf(temp_path)
                     
-                    # Convert the images into pdf file and get its path as return value
-                    images_to_pdfs.images_to_pdfs(doc_length)
-                    
-                    # # Then perform exact same operations as those on pdf
-                    
-                    # for example: if 45 images, then,  ceil(45/10) = ceil(4.5) = 5 pdfs
-                    no_of_pdfs = ceil(doc_length/10)
-    
-                    for i in range(no_of_pdfs):
+                    if pdf_data:
+                        # Save the converted PDF temporarily
+                        temp_pdf_file = default_storage.save('temp_files/converted.pdf', ContentFile(pdf_data))
                         
-                        pdf_path =  str(Path(__file__).resolve().parent / 'calculate_cost' / 'word' / 'temp_pdfs' / f'{i}.pdf' )
-                        pages_to_check = parse_page_ranges(page)
-                        actual_pages_to_check = []
-                        # first iteration mein 1 to 10 pages lene hai and subtract 0
-                        # second iteration mein 11 to 20 pages lene hai and subtract 10
-                        # third iteration mein 21 to 30 pages lene hai and subtract 20
-                        # and so on..
-                        for each_page in pages_to_check:
-                            if (each_page > i*10 and each_page <= (i+1)*10):
-                                actual_pages_to_check.append(each_page - i*10)
-                              
-                        if (len(actual_pages_to_check) !=0 ) : 
-                            # Convert the array to a string with elements separated by ','
-                            actual_pages_to_check_string = ','.join(map(str, actual_pages_to_check))
-                            
-                            black_pages, non_black_pages = check_black_content.check_black_content(pdf_path=pdf_path, page_ranges=actual_pages_to_check_string)
-
-                            cost += 2.0 * len(non_black_pages)
-                            cost += 5.0 * len(black_pages)
-                            cost += 10.0 * len(parse_page_ranges(coloured_page))
+                        # Full path to the temporarily saved PDF file
+                        temp_pdf_path = default_storage.path(temp_pdf_file)
                         
-                        os.remove(pdf_path)
+                        # Proceed with cost calculation for the PDF file
+                        black_pages, non_black_pages = check_black_content.check_black_content(pdf_path=temp_pdf_path, page_ranges=page)
 
-                    # # Delete the temporarily saved file
-                    default_storage.delete(temp_file)
+                        cost += 2.0 * len(non_black_pages)
+                        cost += 5.0 * len(black_pages)
+                        cost += 10.0 * len(parse_page_ranges(coloured_page))
+  
+                        # Delete the temporarily saved files
+                        default_storage.delete(temp_file)
+                        default_storage.delete(temp_pdf_file)
+
+                    else:
+                        # Delete the temporarily saved file
+                        default_storage.delete(temp_file)
+                        return Response({'error': 'Failed to convert DOCX to PDF'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
                 
                 else:
                     default_storage.delete(temp_file)
