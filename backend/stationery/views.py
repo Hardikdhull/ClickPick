@@ -1,53 +1,25 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 from rest_framework import status
-from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items, TempFileStorage
+
+from . models import ActiveOrders, PastOrders, ActivePrintOuts, PastPrintOuts, Items
 from . serializers import ActiveOrdersSerializer, PastOrdersSerializer, ActivePrintoutsSerializer, PastPrintoutsSerializer, ItemsSerializer
 
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+import tempfile
 
 import os
-from pathlib import Path
 
-from math import ceil
-
+from django.http import HttpResponse
+    
 from .calculate_cost import check_black_content
 from .generate_firstpage import firstpage
-
-
-import os  # Import the os module for operating system functions
-
-
-from django.shortcuts import redirect
-
-
-
-
-
-
-import requests
-
-def convert_docx_to_pdf(file_path):
-    url = "http://panel.mait.ac.in:8009/api/convert/"
-
-    try:
-        with open(file_path, 'rb') as file:
-            files = {'docx_file': file}
-            response = requests.post(url, files=files)
-            if response.status_code == 200:
-                # Save the returned PDF file
-                # with open("converted.pdf", 'wb') as pdf_file:
-                #     pdf_file.write(response.content)
-                return response.content
-            else:
-                print("Error occurred:", response.text)
-    except Exception as e:
-        print("Exception occurred:", str(e))
-
-
+from .pdf_watermark import watermark
+from .img_to_pdf import img_to_pdf
+from .word_to_pdf import docx_to_pdf
 
 
 
@@ -68,9 +40,6 @@ class GetItemList(APIView):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-
-
 # To get all active orders of the logged in user
 class GetActiveOrders(APIView):
 
@@ -90,7 +59,6 @@ class GetActiveOrders(APIView):
             orders_data.append(order)
 
         return Response(orders_data, status=status.HTTP_200_OK)
-
 
 # To get all past orders of the logged in user
 class GetPastOrders(APIView):
@@ -215,7 +183,6 @@ class CreateOrder(APIView):
             return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 '''
 
-
 class CreatePrintout(APIView):
 
     permission_classes = (IsAuthenticated, )
@@ -265,6 +232,7 @@ class CreatePrintout(APIView):
             return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 def parse_page_ranges(page_ranges):
     pages_to_check = []
 
@@ -277,8 +245,7 @@ def parse_page_ranges(page_ranges):
             pages_to_check.append(int(item))
     
     return pages_to_check        
-        
-        
+                
 # To calculate cost for printouts   
 # 2rs for b & w page
 # 5rs for b & w page with output on it
@@ -328,7 +295,7 @@ class CostCalculationView(APIView):
                 elif (extension.lower() == 'docx'):
                     
                     # Convert DOCX to PDF using the utility function
-                    pdf_data = convert_docx_to_pdf(temp_path)
+                    pdf_data = docx_to_pdf.convert_docx_to_pdf(temp_path)
                     
                     if pdf_data:
                         # Save the converted PDF temporarily
@@ -365,8 +332,7 @@ class CostCalculationView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
      
 
-from django.http import FileResponse, HttpResponse
-import requests
+
 
 class FirstPageGenerationView(APIView):
     
@@ -389,7 +355,7 @@ class FirstPageGenerationView(APIView):
                                 faculty_name=faculty_name, student_name=student_name, faculty_designation=faculty_designation,
                                 roll_number=roll_number, semester=semester, group=group, image_path=image_path)  
 
-            pdf_data = convert_docx_to_pdf(file_path)
+            pdf_data = docx_to_pdf.convert_docx_to_pdf(file_path)
 
             # Create a response with PDF content?
             pdf_response = HttpResponse(pdf_data, content_type='application/pdf')
@@ -402,13 +368,7 @@ class FirstPageGenerationView(APIView):
         
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-    
-from rest_framework.parsers import MultiPartParser
-import tempfile
-from .img_to_pdf import img_to_pdf
-    
+            
 class ImageToPdfAPIView(APIView):
     parser_classes = [MultiPartParser]
 
