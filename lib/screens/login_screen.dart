@@ -1,4 +1,6 @@
 import 'package:clickpic/constants/colors.dart';
+import 'package:clickpic/widgets/country_code_dropdown.dart';
+import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,20 +13,20 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _numController = TextEditingController();
+    final TextEditingController _pwdController = TextEditingController();
     final screenHeight = MediaQuery.of(context).size.height;
     
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Image at top
           Image.asset(
             'assets/images/login_header.png',
             width: double.infinity,
-            height: screenHeight * 0.45,
+            height: screenHeight * 0.35,
             fit: BoxFit.cover,
           ),
-          // Scrollable white container
           SingleChildScrollView(
             child: Column(
               children: [
@@ -35,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     minHeight: screenHeight * 0.73,
                   ),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
+                    horizontal: 14,
                     vertical: 32,
                   ),
                   decoration: const BoxDecoration(
@@ -74,9 +76,47 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
-                      // Add your form fields here
-                    ],
+                      SizedBox(height: 15,),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Phone number',
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500
+                          )
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          CountryCodeDropdown(),
+                          SizedBox(width: 10,),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: CustomTextField(controller: _numController, hintText: 'Phone Number', width: 261,),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Password',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: CustomTextField(controller: _pwdController, hintText: 'Password', width: double.infinity),
+                      )
+                    ],w),
                   ),
                 ),
               ],
