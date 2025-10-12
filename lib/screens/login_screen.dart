@@ -1,5 +1,6 @@
 import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/country_code_dropdown.dart';
+import 'package:clickpic/widgets/custom_button.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -46,18 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(height: screenHeight * 0.27),
           Container(
             width: double.infinity,
-            constraints: BoxConstraints(
-              minHeight: screenHeight * 0.73,
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 32,
-            ),
+            constraints: BoxConstraints(minHeight: screenHeight * 0.73),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 32),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(32),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,6 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 _buildPhoneNumberSection(),
                 const SizedBox(height: 20),
                 _buildPasswordSection(),
+                const SizedBox(height: 20),
+                _buildLoginButton(),
+                const SizedBox(height: 15),
+                _buildBottomSection(),
               ],
             ),
           ),
@@ -88,21 +86,17 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 8),
         Center(
           child: Text.rich(
             TextSpan(
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 16,
-              ),
+              style: TextStyle(fontSize: 12),
               text: 'Please ',
               children: const <TextSpan>[
                 TextSpan(
                   text: 'Log In',
                   style: TextStyle(
                     color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 TextSpan(text: ' to Continue'),
@@ -132,6 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: CustomTextField(
+                keyboardType: TextInputType.phone,
                 controller: _numController,
                 hintText: 'Phone Number',
                 width: double.infinity,
@@ -150,11 +145,53 @@ class _LoginScreenState extends State<LoginScreen> {
         _buildLabel('Password'),
         const SizedBox(height: 5),
         CustomTextField(
+          isObscureText: true,
+          keyboardType: TextInputType.text,
           controller: _pwdController,
           hintText: 'Password',
           width: double.infinity,
         ),
+        SizedBox(height: 5),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Text(
+            'Forgot Password?',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: AppColors.primary,
+            ),
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return CustomButton(onTap: () {}, text: 'Log In');
+  }
+
+  Widget _buildBottomSection() {
+    return Center(
+      child: Text.rich(
+        TextSpan(
+          text: 'New to Clickpic?? ',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500
+          ),
+          children: const <TextSpan>[
+            TextSpan(
+              text: 'Create Account ',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            TextSpan(text: 'to Continue'),
+          ],
+        ),
+      ),
     );
   }
 

@@ -33,10 +33,10 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 47,
+      height: 49,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
+        border: Border.all(color: Color(0xFFB3B3B3)),
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
       ),
@@ -53,13 +53,13 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
                 children: [
                   Text(
                     entry.value,
-                    style: const TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(width: 5),
                   Text(
                     entry.key,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.black,
                     ),
                   ),
