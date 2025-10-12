@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         fontFamily: AppFonts.inter,
       ),
       title: 'Clickpic',
-      home: SignupScreen(),
+      home: LoginScreen(),
     );
   }
 }

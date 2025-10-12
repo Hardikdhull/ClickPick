@@ -15,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _numController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
   String _selectedCountryCode = '+91';
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +41,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _buildTopIndicator() {
+  return Center(
+    child: Container(
+      width: 54,
+      height: 8,
+      decoration: BoxDecoration(
+        color: Color(0xFFB3B3B3),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+  );
+}
+
   Widget _buildLoginForm(double screenHeight) {
     return SingleChildScrollView(
       child: Column(
@@ -56,6 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildTopIndicator(),
+                const SizedBox(height: 15,),
                 _buildWelcomeHeader(),
                 const SizedBox(height: 15),
                 _buildPhoneNumberSection(),
@@ -145,11 +161,22 @@ class _LoginScreenState extends State<LoginScreen> {
         _buildLabel('Password'),
         const SizedBox(height: 5),
         CustomTextField(
-          isObscureText: true,
+          isObscureText: !_isPasswordVisible,
           keyboardType: TextInputType.text,
           controller: _pwdController,
           hintText: 'Password',
           width: double.infinity,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+              color: AppColors.primary,
+            ),
+            onPressed: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            },
+          ),
         ),
         SizedBox(height: 5),
         Align(
@@ -176,10 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text.rich(
         TextSpan(
           text: 'New to Clickpic?? ',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500
-          ),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           children: const <TextSpan>[
             TextSpan(
               text: 'Create Account ',

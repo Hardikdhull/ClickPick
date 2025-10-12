@@ -42,6 +42,19 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
+  Widget _buildTopIndicator() {
+  return Center(
+    child: Container(
+      width: 54,
+      height: 8,
+      decoration: BoxDecoration(
+        color: Color(0xFFB3B3B3),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+  );
+}
+
   Widget _buildSignUpForm(double screenHeight) {
     return SingleChildScrollView(
       child: Column(
@@ -58,6 +71,8 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildTopIndicator(),
+                const SizedBox(height: 15,),
                 _buildWelcomeHeader(),
                 const SizedBox(height: 20),
                 _buildNameSection(),

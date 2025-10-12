@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final bool isObscureText;
   final double width;
   final String hintText;
+  final Widget? suffixIcon;
   const CustomTextField({
     super.key,
     required this.controller,
@@ -13,6 +14,7 @@ class CustomTextField extends StatelessWidget {
     required this.width,
     required this.keyboardType,
     this.isObscureText = false,
+    this.suffixIcon
   });
 
   @override
@@ -38,6 +40,7 @@ class CustomTextField extends StatelessWidget {
           hintStyle: TextStyle(
             fontSize: 13,
             color: Color(0xFFB3B3B3)),
+          suffixIcon: suffixIcon
         ),
       ),
     );
