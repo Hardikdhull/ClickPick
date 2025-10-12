@@ -1,19 +1,18 @@
 import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/country_code_dropdown.dart';
-import 'package:clickpic/widgets/custom_button.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _numController = TextEditingController();
-  final TextEditingController _pwdController = TextEditingController();
   String _selectedCountryCode = '+91';
 
   @override
@@ -25,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           _buildHeaderImage(screenHeight),
-          _buildLoginForm(screenHeight),
+          _buildSignUpForm(screenHeight),
         ],
       ),
     );
@@ -35,12 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return Image.asset(
       'assets/images/login_header.png',
       width: double.infinity,
-      height: screenHeight * 0.29,
+      height: screenHeight * 0.31,
       fit: BoxFit.cover,
     );
   }
 
-  Widget _buildLoginForm(double screenHeight) {
+  Widget _buildSignUpForm(double screenHeight) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -57,14 +56,10 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildWelcomeHeader(),
-                const SizedBox(height: 15),
-                _buildPhoneNumberSection(),
                 const SizedBox(height: 20),
-                _buildPasswordSection(),
-                const SizedBox(height: 20),
-                _buildLoginButton(),
-                const SizedBox(height: 15),
-                _buildBottomSection(),
+                _buildNameSection(),
+                const SizedBox(height: 15,),
+                _buildPhoneNumberSection()
               ],
             ),
           ),
@@ -78,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Center(
           child: Text(
-            'Welcome Back!',
+            'Welcome Onboard!',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 24,
@@ -89,11 +84,11 @@ class _LoginScreenState extends State<LoginScreen> {
         Center(
           child: Text.rich(
             TextSpan(
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
               text: 'Please ',
               children: const <TextSpan>[
                 TextSpan(
-                  text: 'Log In',
+                  text: 'Sign Up',
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w500,
@@ -103,6 +98,22 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNameSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel('Name'),
+        const SizedBox(height: 5),
+        CustomTextField(
+          keyboardType: TextInputType.text,
+          controller: _nameController,
+          hintText: 'Name',
+          width: double.infinity,
         ),
       ],
     );
@@ -138,63 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildPasswordSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel('Password'),
-        const SizedBox(height: 5),
-        CustomTextField(
-          isObscureText: true,
-          keyboardType: TextInputType.text,
-          controller: _pwdController,
-          hintText: 'Password',
-          width: double.infinity,
-        ),
-        SizedBox(height: 5),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-            'Forgot Password?',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: AppColors.primary,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginButton() {
-    return CustomButton(onTap: () {}, text: 'Log In');
-  }
-
-  Widget _buildBottomSection() {
-    return Center(
-      child: Text.rich(
-        TextSpan(
-          text: 'New to Clickpic?? ',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500
-          ),
-          children: const <TextSpan>[
-            TextSpan(
-              text: 'Create Account ',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            TextSpan(text: 'to Continue'),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildLabel(String text) {
     return Text(
       text,
@@ -204,12 +158,5 @@ class _LoginScreenState extends State<LoginScreen> {
         color: AppColors.primary,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _numController.dispose();
-    _pwdController.dispose();
-    super.dispose();
   }
 }
