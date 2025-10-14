@@ -15,7 +15,11 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
                BuildableName = "clickpic.app"
+=======
+               BuildableName = "clickpick.app"
+>>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
                BlueprintName = "Runner"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
@@ -31,7 +35,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
             BuildableName = "clickpic.app"
+=======
+            BuildableName = "clickpick.app"
+>>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
@@ -66,7 +74,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
             BuildableName = "clickpic.app"
+=======
+            BuildableName = "clickpick.app"
+>>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
@@ -83,7 +95,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "33CC10EC2044A3C60003C045"
+<<<<<<< HEAD
             BuildableName = "clickpic.app"
+=======
+            BuildableName = "clickpick.app"
+>>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>

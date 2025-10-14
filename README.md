@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # clickpic
+=======
+# clickpick
+>>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
 
 A new Flutter project.
 

@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
     "name": "clickpic",
     "short_name": "clickpic",
+=======
+    "name": "clickpick",
+    "short_name": "clickpick",
+>>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
