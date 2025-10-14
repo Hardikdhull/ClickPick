@@ -1,7 +1,9 @@
 import 'package:clickpic/constants/colors.dart';
+import 'package:clickpic/screens/signup_screen.dart';
 import 'package:clickpic/widgets/country_code_dropdown.dart';
 import 'package:clickpic/widgets/custom_button.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -42,17 +44,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildTopIndicator() {
-  return Center(
-    child: Container(
-      width: 54,
-      height: 8,
-      decoration: BoxDecoration(
-        color: Color(0xFFB3B3B3),
-        borderRadius: BorderRadius.circular(8),
+    return Center(
+      child: Container(
+        width: 54,
+        height: 8,
+        decoration: BoxDecoration(
+          color: Color(0xFFB3B3B3),
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildLoginForm(double screenHeight) {
     return SingleChildScrollView(
@@ -71,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTopIndicator(),
-                const SizedBox(height: 15,),
+                const SizedBox(height: 15),
                 _buildWelcomeHeader(),
                 const SizedBox(height: 15),
                 _buildPhoneNumberSection(),
@@ -168,7 +170,9 @@ class _LoginScreenState extends State<LoginScreen> {
           width: double.infinity,
           suffixIcon: IconButton(
             icon: Icon(
-              _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+              _isPasswordVisible
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
               color: AppColors.primary,
             ),
             onPressed: () {
@@ -204,8 +208,17 @@ class _LoginScreenState extends State<LoginScreen> {
         TextSpan(
           text: 'New to Clickpic?? ',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          children: const <TextSpan>[
+          children: <TextSpan>[
             TextSpan(
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignupScreen(),
+                    ),
+                  );
+                },
               text: 'Create Account ',
               style: TextStyle(
                 color: AppColors.primary,

@@ -1,7 +1,9 @@
 import 'package:clickpic/constants/colors.dart';
+import 'package:clickpic/screens/login_screen.dart';
 import 'package:clickpic/widgets/country_code_dropdown.dart';
 import 'package:clickpic/widgets/custom_button.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -43,17 +45,17 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildTopIndicator() {
-  return Center(
-    child: Container(
-      width: 54,
-      height: 8,
-      decoration: BoxDecoration(
-        color: Color(0xFFB3B3B3),
-        borderRadius: BorderRadius.circular(8),
+    return Center(
+      child: Container(
+        width: 54,
+        height: 8,
+        decoration: BoxDecoration(
+          color: Color(0xFFB3B3B3),
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildSignUpForm(double screenHeight) {
     return SingleChildScrollView(
@@ -72,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTopIndicator(),
-                const SizedBox(height: 15,),
+                const SizedBox(height: 15),
                 _buildWelcomeHeader(),
                 const SizedBox(height: 20),
                 _buildNameSection(),
@@ -107,8 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 24,
-                color: Colors
-                    .white, 
+                color: Colors.white,
               ),
             ),
           ),
@@ -224,8 +225,17 @@ class _SignupScreenState extends State<SignupScreen> {
           TextSpan(
             text: 'Already a user?? ',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-            children: const <TextSpan>[
+            children: <TextSpan>[
               TextSpan(
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  },
                 text: 'Log In ',
                 style: TextStyle(
                   color: AppColors.primary,
