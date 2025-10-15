@@ -8,11 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-<<<<<<< HEAD
 import 'package:clickpic/main.dart';
-=======
-import 'package:clickpick/main.dart';
->>>>>>> 77a12cebdf00e149b3df3e6ea2b24c12100c2166
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
