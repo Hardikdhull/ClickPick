@@ -6,4 +6,5 @@ class AppColors {
   static const Color gray = Color(0xFF808080);
   static const Color secondray = Color(0xFFFFD400);
   static const Color purple = Color(0xFF7B2CBF);
+  static const Color testinf = Color(0xFF7B2CBF);
 }

@@ -1,7 +1,10 @@
+import 'package:clickpic/screens/Details_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/upload_box.dart';
+
+import '../widgets/custom_button.dart';
 
 class UploadScreen extends StatelessWidget {
   const UploadScreen ({super.key});
@@ -59,28 +62,14 @@ class UploadScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  // TODO: Handle upload logic
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Upload',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+            CustomButton(
+              text: 'Upload',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const DetailsScreen()),
+                );
+              },
             ),
           ],
         ),
