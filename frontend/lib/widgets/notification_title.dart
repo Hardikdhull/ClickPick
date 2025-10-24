@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clickpic/constants/colors.dart';
+
 class NotificationTile extends StatelessWidget {
   const NotificationTile({
     super.key,
