@@ -1,31 +1,69 @@
-import 'package:clickpic/constants/colors.dart' show AppColors;
-import 'package:clickpic/widgets/print_row.dart';
-import 'package:clickpic/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:clickpic/constants/colors.dart';
+import 'package:clickpic/widgets/custom_button.dart';
+import 'package:clickpic/widgets/custom_text_field.dart';
+import 'package:clickpic/screens/checkout_screen.dart';
 
-
-class DetailsScreen extends StatelessWidget {
-  const DetailsScreen ({super.key});
+class DetailsScreen extends StatefulWidget {
+  const DetailsScreen({super.key});
 
   @override
+  State<DetailsScreen> createState() => _PrintDetailsScreenState();
+}
+
+class _PrintDetailsScreenState extends State<DetailsScreen> {
+  // --- State Variables ---
+  // These will store the user's selections.
+  String _selectedColor = 'Black & White';
+  String _selectedPageSize = 'A4';
+  int _copyCount = 1;
+  final _commentController = TextEditingController();
+
+  final List<String> _colorOptions = ['Black & White', 'Colored'];
+  final List<String> _pageSizeOptions = ['A1', 'A2', 'A3', 'A4', 'A5'];
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  // --- Helper Methods for Copy Counter ---
+  void _incrementCopies() {
+    setState(() {
+      _copyCount++;
+    });
+  }
+
+  void _decrementCopies() {
+    if (_copyCount > 1) {
+      setState(() {
+        _copyCount--;
+      });
+    }
+  }
+
+  // --- Build Method ---
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back, color: Colors.black ),
+        leading: const Icon(Icons.arrow_back, color: Colors.black),
         title: const Text(
           'Print Details',
-          style: TextStyle(color : Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
       ),
-      body: Padding(padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      body: SingleChildScrollView( // Added to prevent overflow
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- Document Preview Section (Unchanged) ---
             const Text(
               'Document',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
@@ -34,60 +72,176 @@ class DetailsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.description, color: AppColors.primary, size: 30),
+                  Icon(Icons.description, color: AppColors.purple, size: 30),
                   SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'My_Resume.pdf',
+                        'My_Resume.pdf', // Placeholder
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text('1.2 MB', style: TextStyle(color: AppColors.gray)),
                     ],
                   ),
-
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+
+            // --- Comments Section (New) ---
+            const Text(
+              'Comments',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            const SizedBox(height: 12),
+            CustomTextField(
+              controller: _commentController,
+              hintText: 'Add special instructions (optional)',
+              keyboardType: TextInputType.text,
+              width: double.infinity,
+            ),
+            const SizedBox(height: 24),
+
+            // --- Options Section (Updated) ---
             const Text(
               'Options',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             const SizedBox(height: 12),
-            PrintRow(
-              icon: Icons.copy,
-              title: 'Copies',
-              value: '1',
-              onTap: () {},
-            ),
-            PrintRow(
-              icon: Icons.color_lens,
+
+            // Color Selection
+            _buildDropdownRow(
               title: 'Color',
-              value: 'Black & White',
-              onTap: () {},
+              value: _selectedColor,
+              items: _colorOptions,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _selectedColor = newValue;
+                  });
+                }
+              },
             ),
-            PrintRow(
-              icon: Icons.find_in_page,
+
+            // Page Size Selection
+            _buildDropdownRow(
               title: 'Paper Size',
-              value: 'A4',
-              onTap: () {},
+              value: _selectedPageSize,
+              items: _pageSizeOptions,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _selectedPageSize = newValue;
+                  });
+                }
+              },
             ),
-            const Spacer(),
+
+            // Copy Counter
+            _buildCopyCounterRow(),
+
+            const SizedBox(height: 40), // Spacing before the button
+
+            // --- Proceed Button (Unchanged) ---
             CustomButton(
               text: 'Proceed to Payment',
               onTap: () {
-                // TODO: Handle navigation to payment or cart
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CheckoutScreen()),
+                );
               },
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // --- Helper Widgets for Building Rows ---
+
+  // A generic builder for the dropdown rows
+  Widget _buildDropdownRow({
+    required String title,
+    required String value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: AppColors.Light_gray, width: 1),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: value,
+                items: items.map((String item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+                onChanged: onChanged,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // A specific builder for the copy counter
+  Widget _buildCopyCounterRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Copies',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: AppColors.Light_gray, width: 1),
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.remove),
+                  onPressed: _decrementCopies,
+                  color: AppColors.gray,
+                ),
+                Text(
+                  '$_copyCount',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _incrementCopies,
+                  color: AppColors.primary,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
