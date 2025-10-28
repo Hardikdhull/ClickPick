@@ -3,6 +3,8 @@ import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/custom_button.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:clickpic/screens/checkout_screen.dart';
+import 'package:clickpic/widgets/progressstepper.dart';
+
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({super.key});
@@ -12,8 +14,7 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _PrintDetailsScreenState extends State<DetailsScreen> {
-  // --- State Variables ---
-  // These will store the user's selections.
+
   String _selectedColor = 'Black & White';
   String _selectedPageSize = 'A4';
   int _copyCount = 1;
@@ -27,14 +28,11 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
     _commentController.dispose();
     super.dispose();
   }
-
-  // --- Helper Methods for Copy Counter ---
   void _incrementCopies() {
     setState(() {
       _copyCount++;
     });
   }
-
   void _decrementCopies() {
     if (_copyCount > 1) {
       setState(() {
@@ -42,8 +40,6 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
       });
     }
   }
-
-  // --- Build Method ---
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,12 +54,13 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: SingleChildScrollView( // Added to prevent overflow
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- Document Preview Section (Unchanged) ---
+            const ProgressStepper(currentStep: 1),
+            const SizedBox(height: 12),
             const Text(
               'Document',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
@@ -83,7 +80,7 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'My_Resume.pdf', // Placeholder
+                        'My_Resume.pdf',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text('1.2 MB', style: TextStyle(color: AppColors.gray)),
@@ -93,8 +90,6 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
               ),
             ),
             const SizedBox(height: 24),
-
-            // --- Comments Section (New) ---
             const Text(
               'Comments',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
@@ -107,15 +102,11 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
               width: double.infinity,
             ),
             const SizedBox(height: 24),
-
-            // --- Options Section (Updated) ---
             const Text(
               'Options',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             const SizedBox(height: 12),
-
-            // Color Selection
             _buildDropdownRow(
               title: 'Color',
               value: _selectedColor,
@@ -128,8 +119,6 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
                 }
               },
             ),
-
-            // Page Size Selection
             _buildDropdownRow(
               title: 'Paper Size',
               value: _selectedPageSize,
@@ -142,13 +131,9 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
                 }
               },
             ),
-
-            // Copy Counter
             _buildCopyCounterRow(),
 
-            const SizedBox(height: 40), // Spacing before the button
-
-            // --- Proceed Button (Unchanged) ---
+            const SizedBox(height: 40),
             CustomButton(
               text: 'Proceed to Payment',
               onTap: () {
@@ -163,10 +148,6 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
       ),
     );
   }
-
-  // --- Helper Widgets for Building Rows ---
-
-  // A generic builder for the dropdown rows
   Widget _buildDropdownRow({
     required String title,
     required String value,

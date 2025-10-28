@@ -3,6 +3,7 @@ import 'package:clickpic/widgets/custom_button.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/summary_row.dart';
+import 'package:clickpic/widgets/progressstepper.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -43,6 +44,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const ProgressStepper(currentStep: 1),
+            const SizedBox(height: 32),
             const Text(
               'Order Summary',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -100,7 +103,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             const SizedBox(height: 40),
 
-            // Using your CustomButton
             CustomButton(
               text: 'Pay ₹55.00',
               onTap: () {

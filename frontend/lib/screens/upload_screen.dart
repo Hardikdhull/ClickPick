@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/upload_box.dart';
-
+import 'package:clickpic/widgets/progressstepper.dart';
 import '../widgets/custom_button.dart';
 
 class UploadScreen extends StatelessWidget {
@@ -30,6 +30,8 @@ class UploadScreen extends StatelessWidget {
       body: Padding(padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0,),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const ProgressStepper(currentStep: 0),
+            const SizedBox(height: 12),
             const Text(
               'Upload your document',
               style: TextStyle(
@@ -58,7 +60,7 @@ class UploadScreen extends StatelessWidget {
               'Pdf, Jpg, Png',
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.gray,
+                color: Colors.white,
               ),
             ),
             const Spacer(),
