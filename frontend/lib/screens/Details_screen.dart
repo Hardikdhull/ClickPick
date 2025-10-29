@@ -133,7 +133,7 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
             ),
             _buildCopyCounterRow(),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 100),
             CustomButton(
               text: 'Proceed to Payment',
               onTap: () {
@@ -187,7 +187,6 @@ class _PrintDetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  // A specific builder for the copy counter
   Widget _buildCopyCounterRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

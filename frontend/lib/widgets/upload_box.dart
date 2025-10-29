@@ -20,7 +20,7 @@ class UploadBox extends StatelessWidget {
           width: double.infinity,
           height: 180,
           decoration: BoxDecoration(
-            color: AppColors.gray.withValues(),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Column(
@@ -29,7 +29,7 @@ class UploadBox extends StatelessWidget {
               Icon(
                 Icons.cloud_upload_outlined,
                 size: 60,
-                color: AppColors.purple,
+                color: AppColors.primary,
 
               ),
               SizedBox(
@@ -40,7 +40,7 @@ class UploadBox extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.purple,
+                  color: AppColors.primary,
 
                 ),
               ),

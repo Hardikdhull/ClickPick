@@ -1,57 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:clickpic/constants/colors.dart';
+import 'package:clickpic/constants/colors.dart'; // Import your AppColors
 
 class ProgressStepper extends StatelessWidget {
+  /// The current step, 0-indexed (0 = Upload, 1 = Details, 2 = Checkout).
   final int currentStep;
 
   const ProgressStepper({super.key, required this.currentStep});
 
   @override
   Widget build(BuildContext context) {
+    const double stepNodeRadius = 16.0;
+    const double stepNodeDiameter = stepNodeRadius * 2;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double totalWidth = constraints.maxWidth;
-        final double progressWidth = totalWidth * (currentStep / 2.0);
+        final double lineTotalWidth = totalWidth - stepNodeDiameter;
+        final double progressWidth = lineTotalWidth * (currentStep / 2.0);
 
-        return Container(
+        return SizedBox(
           width: totalWidth,
-          height: 60,
+          height: 60, // Height to fit circle and text
           child: Stack(
             alignment: Alignment.center,
             children: [
+              // --- 1. The Lines ---
               Positioned(
-                top: 12,
-                left: totalWidth / 4,
-                right: totalWidth / 4,
+                left: stepNodeRadius,
+                right: stepNodeRadius,
+                top: stepNodeRadius,
                 child: Container(
                   height: 2.0,
                   color: AppColors.Light_gray,
                 ),
               ),
               Positioned(
-                top: 12,
-                left: totalWidth / 4,
+                top: stepNodeRadius,
+                left: stepNodeRadius,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   height: 2.0,
                   width: progressWidth,
-                  color: AppColors.purple,
+                  color: AppColors.primary,
                 ),
               ),
+
+              // --- 2. The Circles and Text ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildStepNode(
                     title: 'Upload',
+                    icon: Icons.cloud_upload_outlined, // Added icon
                     stepIndex: 0,
+                    radius: stepNodeRadius,
                   ),
                   _buildStepNode(
                     title: 'Details',
+                    icon: Icons.list_alt_outlined, // Added icon
                     stepIndex: 1,
+                    radius: stepNodeRadius,
                   ),
                   _buildStepNode(
                     title: 'Checkout',
+                    icon: Icons.payment_outlined, // Added icon
                     stepIndex: 2,
+                    radius: stepNodeRadius,
                   ),
                 ],
               ),
@@ -61,49 +75,48 @@ class ProgressStepper extends StatelessWidget {
       },
     );
   }
-  Widget _buildStepNode({required String title, required int stepIndex}) {
+
+  // Helper widget to build each step (circle + icon + text)
+  Widget _buildStepNode({
+    required String title,
+    required IconData icon, // Icon is now a required parameter
+    required int stepIndex,
+    required double radius,
+  }) {
     final bool isActive = currentStep == stepIndex;
     final bool isCompleted = currentStep > stepIndex;
 
     Color circleColor;
-    Color textColor;
-    Widget circleChild;
+    Color iconColor;
+    Widget iconChild;
 
-    if (isActive) {
-      circleColor = AppColors.purple.withOpacity(0.2);
-      textColor = AppColors.purple;
-      circleChild = CircleAvatar(
-        radius: 6,
-        backgroundColor: AppColors.purple,
-      );
-    } else if (isCompleted) {
-      circleColor = AppColors.purple;
-      textColor = AppColors.purple;
-      circleChild = Container();
+    if (isCompleted) {
+      circleColor = AppColors.primary;
+      iconChild = const Icon(Icons.check, color: Colors.white, size: 16);
+    } else if (isActive) {
+      circleColor = AppColors.primary.withOpacity(0.2);
+      iconColor = AppColors.primary;
+      iconChild = Icon(icon, color: iconColor, size: 18); // Use the step's icon
     } else {
-      circleColor = Colors.white;
-      textColor = AppColors.Light_gray;
-      circleChild = Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.Light_gray, width: 2),
-        ),
-      );
+      circleColor = AppColors.Light_gray.withOpacity(0.5); // Lighter gray
+      iconColor = AppColors.gray;
+      iconChild = Icon(icon, color: iconColor, size: 18); // Use the step's icon
     }
 
     return Column(
       children: [
         CircleAvatar(
-          radius: 12,
+          radius: radius,
           backgroundColor: circleColor,
-          child: circleChild,
+          child: iconChild, // Use the new iconChild
         ),
         const SizedBox(height: 8),
+        // The Text
         Text(
           title,
           style: TextStyle(
-            color: textColor,
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            color: (isCompleted || isActive) ? AppColors.primary : AppColors.gray,
+            fontWeight: (isCompleted || isActive) ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ],

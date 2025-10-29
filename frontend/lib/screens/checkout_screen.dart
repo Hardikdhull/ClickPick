@@ -4,6 +4,7 @@ import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/widgets/summary_row.dart';
 import 'package:clickpic/widgets/progressstepper.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -44,7 +45,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ProgressStepper(currentStep: 1),
+            const ProgressStepper(currentStep: 2),
             const SizedBox(height: 32),
             const Text(
               'Order Summary',
@@ -101,13 +102,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 200),
 
             CustomButton(
               text: 'Pay ₹55.00',
               onTap: () {
                 // TODO: Add payment processing logic
-                print('Payment button tapped!');
+
               },
             ),
           ],
