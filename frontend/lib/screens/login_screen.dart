@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
         width: 54,
         height: 8,
         decoration: BoxDecoration(
-          color: Color(0xFFB3B3B3),
+          color: const Color(0xFFB3B3B3),
           borderRadius: BorderRadius.circular(8),
         ),
       ),
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildWelcomeHeader() {
-    return Column(
+    return const Column(
       children: [
         Center(
           child: Text(
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextSpan(
               style: TextStyle(fontSize: 12),
               text: 'Please ',
-              children: const <TextSpan>[
+              children: <TextSpan>[
                 TextSpan(
                   text: 'Log In',
                   style: TextStyle(
@@ -182,8 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           ),
         ),
-        SizedBox(height: 5),
-        Align(
+        const SizedBox(height: 5),
+        const Align(
           alignment: Alignment.bottomRight,
           child: Text(
             'Forgot Password?',
@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text.rich(
         TextSpan(
           text: 'New to Clickpic?? ',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           children: <TextSpan>[
             TextSpan(
               recognizer: TapGestureRecognizer()
@@ -220,12 +220,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
               text: 'Create Account ',
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            TextSpan(text: 'to Continue'),
+            const TextSpan(text: 'to Continue'),
           ],
         ),
       ),
@@ -235,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLabel(String text) {
     return Text(
       text,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: AppColors.primary,

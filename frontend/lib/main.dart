@@ -1,5 +1,8 @@
 import 'package:clickpic/constants/fonts.dart';
+import 'package:clickpic/screens/Details_screen.dart';
+import 'package:clickpic/screens/home_screen.dart';
 import 'package:clickpic/screens/login_screen.dart';
+import 'package:clickpic/screens/orderporcessing_screen.dart';
 import 'package:clickpic/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clickpic/screens/upload_screen.dart';
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
         fontFamily: AppFonts.inter,
       ),
       title: 'Clickpic',
-      home: UploadScreen(),
+      home: HomeScreen(),
     );
   }
 }
