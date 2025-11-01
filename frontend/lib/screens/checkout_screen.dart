@@ -31,8 +31,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
-        title: const Text(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),        title: const Text(
           'Checkout',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),

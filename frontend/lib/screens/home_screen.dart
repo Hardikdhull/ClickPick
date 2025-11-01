@@ -2,6 +2,8 @@ import 'package:clickpic/constants/colors.dart';
 import 'package:clickpic/constants/fonts.dart';
 import 'package:clickpic/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:clickpic/screens/upload_screen.dart';
+import 'package:clickpic/screens/notification_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -107,26 +109,37 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.print_outlined,
                     label: 'Printout',
                     color: const Color(0xFF2D7A6E),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const UploadScreen()),
+                      );
+                    },
                   ),
                   _buildMenuItem(
                     icon: Icons.grid_view_outlined,
                     label: 'Templates',
                     color: const Color(0xFF6B2D8F),
+                    onTap: () {},
                   ),
                   _buildMenuItem(
                     icon: Icons.shopping_cart_outlined,
                     label: 'Shop',
                     color: const Color(0xFF2D7A8F),
+                    onTap: () {},
                   ),
                   _buildMenuItem(
                     icon: Icons.access_time,
                     label: 'Order\nHistory',
                     color: const Color(0xFFB84E00),
+                    onTap: () {},
+
                   ),
                   _buildMenuItem(
                     icon: Icons.help_outline,
                     label: 'HelpBot',
                     color: const Color(0xFF8F2D7A),
+                    onTap: () {},
                   ),
                 ],
               ),
@@ -196,11 +209,13 @@ class HomeScreen extends StatelessWidget {
                 _buildDownloadCard(
                   filename: 'Portrait_of_Lady_Elaborate_Mindmap.pdf',
                   date: 'Modified on: 31 Jul 2025',
+                  context: context,
                 ),
                 const SizedBox(height: 12),
                 _buildDownloadCard(
                   filename: 'Portrait_of_Lady_Elaborate_Mindmap.pdf',
                   date: 'Modified on: 31 Jul 2025',
+                  context: context,
                 ),
                 const SizedBox(height: 16),
                 Center(
@@ -227,7 +242,11 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const UploadScreen())
+          );
+        },
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text(
@@ -243,39 +262,44 @@ class HomeScreen extends StatelessWidget {
     required IconData icon,
     required String label,
     required Color color,
+    required VoidCallback onTap,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 28,
-          ),
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          height: 32,
-          width: 65,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-              height: 1.2,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 28,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          SizedBox(
+            height: 32,
+            width: 65,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+                height: 1.2,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -383,6 +407,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildDownloadCard({
     required String filename,
     required String date,
+    required BuildContext context,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -439,7 +464,12 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const UploadScreen()),
+              );
+            },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 8),
             ),
